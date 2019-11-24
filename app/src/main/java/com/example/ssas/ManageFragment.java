@@ -24,6 +24,7 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
     private View view;
     private List<String> universityList = new ArrayList<>();
     private RecyclerView recyclerView = null;
+    private CollegeAdapter adapter = null;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_management, container, false);
@@ -53,7 +54,7 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
         recyclerView = view.findViewById(R.id.college_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
-        CollegeAdapter adapter = new CollegeAdapter(universityList);
+        adapter = new CollegeAdapter(universityList);
         recyclerView.setAdapter(adapter);
 
         View addUniversity = (Button)view.findViewById(R.id.join_new_university);
@@ -81,7 +82,8 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
                     {
                         //TODO: change the database and refresh the page
                         universityList.add(editText.getText().toString());
-                        refreshAdapter();//刷新当前活动
+                        //refreshAdapter();//刷新当前活动
+                        adapter.notifyDataSetChanged();
 
                     }
                 });

@@ -17,11 +17,12 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private EditText id;//用户的密码
+    private EditText id;//用户的id
     private EditText name;//用户的真实姓名
     private EditText password;//用户的密码
     private EditText password_repeat;//用户的密码
     private Button register;//登录按钮
+    private EditText email;//email
 
     private List<Map<String, Object>> list = new ArrayList<>();//从服务器端返回的结果
 
@@ -44,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         password_repeat = (EditText) findViewById(R.id.password_repeat);
 
         register = (Button) findViewById(R.id.register);
+        email = (EditText)findViewById(R.id.email);
         register.setOnClickListener(this);
     }
 
@@ -72,11 +74,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      */
     private void register()
     {
-        String userId, userName, userPassword, userPasswordRepeat;//用户输入的id、姓名、密码、确认密码
+        String userId, userName, userPassword, userPasswordRepeat, userEmail;//用户输入的id、姓名、密码、确认密码
         userId = id.getText().toString();//获取用户输入的id
         userName = name.getText().toString();//获取用户输入的姓名
         userPassword = password.getText().toString();//获取用户输入的密码
         userPasswordRepeat = password_repeat.getText().toString();////获取用户输入的确认密码
+        userEmail = email.getText().toString();
 
         if (userId.length() == 0 || userName.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、姓名、密码
         {
@@ -96,6 +99,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
+        Teacher teacher =new Teacher();
+        teacher.setId(userId);
+        teacher.setEmail(userEmail);
+        teacher.setName(userName);
 
+        //TODO: change database
+
+        Toast.makeText(RegisterActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
+        MainActivity.user.setId(userId);
+        RegisterActivity.this.finish();//结束当前login的activity，直接回到main activity
     }
 }

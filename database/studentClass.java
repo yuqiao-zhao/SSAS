@@ -20,7 +20,7 @@ public class Student {
     }
 
 
-    public void mark(String courseId, int courseInfoId, boolean flag) throws Exception {
+    public void markAttendance(String courseId, int courseInfoId, boolean flag) throws Exception {
         if(not lookup.get(courseId).containsKey(courseInfoId) || not lookup.containsKey(courseId)) {
             throw new Exception();
         }

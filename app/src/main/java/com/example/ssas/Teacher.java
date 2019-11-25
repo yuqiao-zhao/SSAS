@@ -5,6 +5,7 @@ import java.util.List;
 public class Teacher {
     private String id;
     private String name;
+    private String password;
     private List<Course> courses;
     private List<String> colleges;
     private String email;
@@ -70,5 +71,13 @@ public class Teacher {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

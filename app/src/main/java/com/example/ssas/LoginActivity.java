@@ -79,6 +79,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        }
         Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
         MainActivity.user.setId("11223344");
+        MainActivity.user.setName("Jeff");
+        MainActivity.user.setEmail("12345@gmail.com");
+        MainActivity.user.setPassword("123");
         LoginActivity.this.finish();//结束当前login的activity，直接回到main activity
     }
 }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,12 +21,32 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
     private List<Course> courseList = new ArrayList<>();
     private RecyclerView recyclerView = null;
     private static String collegeName;
+    private CourseAdapter adapter=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getCourseList();
         bind();
+    }
+
+    //Back to the father activity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                returnHome(this);
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static void returnHome(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     /**
@@ -36,7 +57,7 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
         recyclerView = (RecyclerView) findViewById(R.id.course_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        CourseAdapter adapter = new CourseAdapter(courseList);
+        adapter = new CourseAdapter(courseList);
         recyclerView.setAdapter(adapter);
 
         View addCourse = (Button)findViewById(R.id.add_new_course);
@@ -77,7 +98,7 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
                         Course newCourse = new Course();
                         newCourse.setCourseName(editText.getText().toString());
                         courseList.add(newCourse);
-                        refreshAdapter();//刷新当前活动
+                        adapter.notifyDataSetChanged();
 
                     }
                 });

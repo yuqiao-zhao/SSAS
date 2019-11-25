@@ -13,65 +13,65 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
-    private List<Course> mCourseList;
+public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> {
+    private List<Class> mClassList;
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
-        TextView courseName;
-        TextView semester;
-        Button deleteCourse;
+        TextView classStartTime;
+        TextView studentNum;
+        Button deleteClass;
 
         public ViewHolder(View view)
         {
             super(view);
-            courseName = (TextView) view.findViewById(R.id.course_name);
-            deleteCourse = (Button) view.findViewById(R.id.delete_course);
-            semester = (TextView) view.findViewById(R.id.semester);
+            classStartTime = (TextView) view.findViewById(R.id.class_date);
+            studentNum = (TextView) view.findViewById(R.id.student_num);
+            deleteClass = (Button) view.findViewById(R.id.delete_class);
         }
     }
 
-    public CourseAdapter(List<Course> courseList)
+    public ClassAdapter(List<Class> classList)
     {
-        mCourseList=courseList;
+        mClassList=classList;
     }
 
-    public CourseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public ClassAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_item, parent, false);
-        final CourseAdapter.ViewHolder holder = new CourseAdapter.ViewHolder(view);
-        holder.courseName.setOnClickListener(
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.class_item, parent, false);
+        final ClassAdapter.ViewHolder holder = new ClassAdapter.ViewHolder(view);
+        holder.classStartTime.setOnClickListener(
                 new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
                         int position = holder.getAdapterPosition();
-                        Course course = mCourseList.get(position);
-                        Toast.makeText(view.getContext(), course.getCourseName(),Toast.LENGTH_SHORT).show();
+                        Class aClass = mClassList.get(position);
+                        Toast.makeText(view.getContext(), aClass.getStartTime().toString(),Toast.LENGTH_SHORT).show();
                         //TODO: get course list from database
-                        ClassListActivity.actionStart(view.getContext(),course);
+                        RecordListActivity.actionStart(view.getContext(), aClass);
                     }
                 }
         );
-        holder.deleteCourse.setOnClickListener(
+        holder.deleteClass.setOnClickListener(
                 new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
                         final int position = holder.getAdapterPosition();
-                        Course course = mCourseList.get(position);
+                        Class aClass = mClassList.get(position);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                        builder.setTitle("Do you want to delete the course? All the information in this course will be deleted.");//设置Title的内容
+                        builder.setTitle("Do you want to delete the class? All the information in this class will be deleted.");//设置Title的内容
                         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
                         {
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 //TODO: delete course from database
-                                mCourseList.remove(position);
+                                mClassList.remove(position);
                                 notifyDataSetChanged();
                             }
 
@@ -86,16 +86,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
     }
 
-    public void onBindViewHolder(CourseAdapter.ViewHolder holder, int position)
+    public void onBindViewHolder(ClassAdapter.ViewHolder holder, int position)
     {
-        Course course= mCourseList.get(position);
-        holder.courseName.setText(course.getCourseName());
-        holder.semester.setText(course.getSemester());
+        Class aClass = mClassList.get(position);
+        holder.classStartTime.setText(aClass.getStartTimeInString().toString());
+        holder.studentNum.setText(aClass.getRecords().size() + " students");
     }
 
     @Override
     public int getItemCount()
     {
-        return mCourseList.size();
+        return mClassList.size();
     }
 }

@@ -7,16 +7,11 @@ public class Record {
     private long recordID;
     private String teacherID;
     private Date signInTime;
-    private List<Student> registeredStudent;
-    private String status;
+    private Student registeredStudent;
+    private String status = "Present";
 
     public long getRecordID() {
         return recordID;
-    }
-
-    public void addStudent(Student student)
-    {
-        registeredStudent.add(student);
     }
 
     public void setRecordID(long recordID) {
@@ -39,13 +34,10 @@ public class Record {
         this.signInTime = signInTime;
     }
 
-    public List<Student> getRegisteredStudent() {
+    public Student getRegisteredStudent() {
         return registeredStudent;
     }
 
-    public void setRegisteredStudent(List<Student> registeredStudent) {
-        this.registeredStudent = registeredStudent;
-    }
 
     public String getStatus() {
         return status;
@@ -53,5 +45,9 @@ public class Record {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setRegisteredStudent(Student registeredStudent) {
+        this.registeredStudent = registeredStudent;
     }
 }

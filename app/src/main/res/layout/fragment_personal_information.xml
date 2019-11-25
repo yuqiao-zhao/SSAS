@@ -35,15 +35,14 @@
             android:text="Name: "
             android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/name"
+        <EditText
+            android:id="@+id/name_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="30dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Tom"
             android:textSize="25sp" />
     </LinearLayout>
 
@@ -63,29 +62,42 @@
             android:text="E-mail: "
             android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/birthday"
+        <EditText
+            android:id="@+id/email_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="30dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="xxxx@xxx.xxx"
             android:textSize="25sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/change"
+            android:id="@+id/saveProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="25dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:text="Save"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:text="Reset Passwrod"
             android:textSize="25dp" />
     </LinearLayout>

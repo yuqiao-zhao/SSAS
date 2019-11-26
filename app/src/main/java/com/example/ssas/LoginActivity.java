@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +19,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText password;//用户的密码
     private Button login;//登录按钮
     private TextView register;//注册按钮
+
+    private long exitTime=System.currentTimeMillis();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     {
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
+    }
+
+    /**
+     * 返回键退出应用
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            MainActivity.user.setId("-100");
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**

@@ -1,8 +1,15 @@
 package com.example.ssas;
 
-import org.junit.Test;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.*;
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -14,4 +21,6 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+
 }

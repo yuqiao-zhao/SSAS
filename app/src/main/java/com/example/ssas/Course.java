@@ -5,7 +5,7 @@ import java.util.List;
 public class Course {
     private String courseID;
     private String courseName;
-    private List<Teacher> tutor;
+    private Teacher tutor;
     private String semester;
     private List<Class> classes;
 
@@ -25,11 +25,11 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public List<Teacher> getTutor() {
+    public Teacher getTutor() {
         return tutor;
     }
 
-    public void setTutor(List<Teacher> tutor) {
+    public void setTutor(Teacher tutor) {
         this.tutor = tutor;
     }
 

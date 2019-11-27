@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Database extends SQLiteOpenHelper {
     private SQLiteDatabase db;
     public static final String CREATE_TEACHER_TABLE = "CREATE TABLE IF NOT EXISTS teacher("
@@ -27,6 +30,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String CREATE_COURSE_TABLE = "create table course("
             + "courseId integer primary key autoincrement, "
             + "courseName text, "
+            + "universityName text, "
             + "teacherId integer, "
             + "semester text)";
 
@@ -84,6 +88,7 @@ public class Database extends SQLiteOpenHelper {
             do {
                 //check password
                 String password = cursor.getString(cursor.getColumnIndex("password"));
+                String email = cursor.getString(cursor.getColumnIndex("email"));
 
                 //password are equal, then login success
                 if (password.equals(userPassword)) {

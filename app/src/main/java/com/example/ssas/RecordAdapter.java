@@ -47,19 +47,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
     {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.record_item, parent, false);
         final RecordAdapter.ViewHolder holder = new RecordAdapter.ViewHolder(view);
-        holder.studentName.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        int position = holder.getAdapterPosition();
-                        Record record = mRecordList.get(position);
-                        Toast.makeText(view.getContext(), String.valueOf(record.getRecordID()),Toast.LENGTH_SHORT).show();
-                        //TODO: get course list from database
-                    }
-                }
-        );
+
         holder.attendance.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
@@ -106,7 +94,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
     {
         Record record = mRecordList.get(position);
         holder.studentName.setText(record.getRegisteredStudent().getStudentName());
-        holder.studentName.setText(record.getRegisteredStudent().getStudentID());
+        holder.studentID.setText("ID: " + record.getRegisteredStudent().getStudentID());
     }
 
     @Override

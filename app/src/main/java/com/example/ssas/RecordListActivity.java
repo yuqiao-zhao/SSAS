@@ -106,6 +106,8 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
                     public void onClick(View view) {
                         String studentName = editStudentName.getText().toString();
                         String studentID = editStudentID.getText().toString();
+                        Log.d("StudentName", studentName);
+                        Log.d("StudentID", studentID);
                         if (!TextUtils.isEmpty(studentName) && !TextUtils.isEmpty(studentID))
                         {
                             Record newRecord = new Record();

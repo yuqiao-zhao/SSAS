@@ -34,7 +34,7 @@
                     android:ellipsize="end"
                     android:maxLength="50"
                     android:singleLine="true"
-                    android:text="John Smith"
+                    android:text=""
                     android:textSize="25sp" />
 
                 <TextView
@@ -46,7 +46,7 @@
                     android:ellipsize="end"
                     android:maxLength="50"
                     android:singleLine="true"
-                    android:text="ID: 1128899"
+                    android:text="ID: "
                     android:textSize="15sp" />
             </LinearLayout>
 

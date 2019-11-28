@@ -152,3 +152,53 @@ public class Database extends SQLiteOpenHelper {
         this.db = db;
     }
 }
+
+
+
+
+    public queryUniversity (String teacherId) 
+    {
+        List<String> res=new ArrayList<>();
+        Cursor cursor=db.rawQuery("select * from university where teacherId = ?", new String[] {teacherId});
+        if(cursor!=null && cursor.moveToFirst()) 
+        {
+            do {
+                String current_university=cursor.getString(cursor.getColumnIndex("universityName"));          
+                res.add(current_university);    
+            }while (cursor.moveTonext());
+        }
+        return res;
+
+    }
+
+
+
+    public addUniversity(String teacherId, String universityName) 
+    {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message= "";
+        Cursor cursor=db.rawQuery("select * from university where teacherId = ?", new String[] {teacherId});
+        if(cursor!=null && cursor.moveToFirst())
+        {
+            do {
+                String current_university=cursor.getString(cursor.getColumnIndex("universityName"));
+                if(current_university.equals(universityName)) {
+                    isSuccess=false;
+                    message="The information already exists";
+                    break;
+                }
+            }while (cursor.moveToNext());
+        }
+        if(isSuccess) {
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(COL_1,teacherId);
+            contentValues.put(COL_2,universityName);
+            db.insert(university, null, contentValues);
+            message="Information added";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }

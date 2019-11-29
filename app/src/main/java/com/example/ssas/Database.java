@@ -202,3 +202,71 @@ public class Database extends SQLiteOpenHelper {
         returnMsg.setSuccess(isSuccess);
         return returnMsg;
     }
+
+
+    public List<String> queryCourses(String teacherId, String universityName) {
+        List<String> res=new ArrayList<>();
+        Cursor cursor=db.rawQuery("select * from course where universityName = ? AND teacherId = ?", new String[] {universityName,teacherId});
+        if(cursor!=null && cursor.moveToFirst())
+        {
+            do {
+                String course=cursor.getString(cursor.getColumnIndex("courseName"));
+                res.add(course);
+            }while (cursor.moveTonext());
+        }
+        return res;
+        
+    }
+
+
+    public ReturnMsg addCourse(String teacherId, String courseName, String universityName, String semester) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        Cursor cursor=db.rawQuery("select * from course where teacherId = ? AND courseName = ? AND universityName = ?", new String[] {teacherId, courseName, universityName});
+        if(cursor !=null && cursor.moveToFirst())
+        {
+            do {
+                String current_course=cursor.getString(cursor.getColumnIndex("courseName"));
+                if(current_course.equals(courseName)) {
+                    isSuccess=false;
+                    message="The information already exists";
+                    break;
+                }
+            }while (cursor.moveToNext());
+        }
+        if(isSuccess) {
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(COL_2, courseName);
+            contentValues.put(COL_3, universityName);
+            int tem=Integer.parseInt(teacherId);
+            contentValues.put(COL_4, tem);
+            contentValues.put(COL_5, semester);
+            db.insert(course,null,contentValues);
+            message="new course added";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+
+    public ReturnMsg deleteCourse(String courseId) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        SQLiteDatabase db=this.getWritableDatabase();
+        int res=db.delete(course,"courseId = ?", new String[] {courseId});
+        if(res==0) {
+            isSuccess=false;
+            message="The course does't exist.";
+        }
+        else {
+            message="Course deleted";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }

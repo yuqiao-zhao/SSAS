@@ -156,7 +156,7 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-    public queryUniversity (String teacherId) 
+    public List<String> queryUniversity (String teacherId) 
     {
         List<String> res=new ArrayList<>();
         Cursor cursor=db.rawQuery("select * from university where teacherId = ?", new String[] {teacherId});
@@ -173,7 +173,7 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-    public addUniversity(String teacherId, String universityName) 
+    public ReturnMsg addUniversity(String teacherId, String universityName) 
     {
         ReturnMsg returnMsg=new ReturnMsg();
         boolean isSuccess=true;

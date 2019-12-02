@@ -24,6 +24,7 @@ public class Database extends SQLiteOpenHelper {
             + "studentName text)";
 
     public static final String CREATE_UNIVERSITY_TABLE = "create table university("
+            + "universityId integer primary key autoincrement, "
             + "teacherId integer, "
             + "universityName text)";
 

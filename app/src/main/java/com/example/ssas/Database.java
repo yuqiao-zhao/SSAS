@@ -270,3 +270,80 @@ public class Database extends SQLiteOpenHelper {
         returnMsg.setSuccess(isSuccess);
         return returnMsg;
     }
+
+
+    public ReturnMsg addClass(String startTime, String courseId) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        Cursor cursor=db.rawQuery("select * from course where courseId = ? AND startTime = ?", new String[] {courseId, startTime});
+        if(cursor !=null && cursor.moveTofirst())
+        {
+            isSuccess=false;
+            message="The class already exists";
+        }
+        if(isSuccess) {
+            SQLiteDatabase db=this.getWritableDatabase();
+            ContentValues contentValues=new ContentValues();
+            contentValues.put(COL_1,startTime);
+            int tem=Integer.parseInt(courseId);
+            contentValues.put(COL_2,tem);
+            db.insert(CLASS,null,contentValues);
+            message="new class added";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+
+        public ReturnMsg deleteClass(String classId) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        SQLiteDatabase db=this.getWritableDatabase();
+        int res=db.delete(CLASS,"classId = ?", new String[] {classId});
+        if(res==0) {
+            isSuccess=false;
+            message="The class does not exist.";
+        }
+        else {
+            message="Class deleted";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+        public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        Cursor cursor=db.rawQuery("select * from teacher where teacherId = ?", new String[] {teacherId});
+        if(cursor==null) {
+            isSuccess=false;
+            message="The teacher's information is not found";
+        }
+        else {
+            message="The teacher's information updated";
+        }
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(COL2,teacherName);
+        contentValues.put(COL_4,email);
+        db.update(teacher,contentValues,"teacherId = ?", new String[] {teacherId});
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+
+
+
+
+
+
+

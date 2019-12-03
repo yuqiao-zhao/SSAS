@@ -205,6 +205,25 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
+    public ReturnMsg deleteUniversity(String universityId) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        SQLiteDatabase db=this.getWritableDatabase();
+        int res=db.delete(university,"universityId = ?", new String[] {universityId});
+        if(res==0) {
+            isSuccess=false;
+            message="The university does not exist";
+        }
+        else {
+            message="University deleted";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
     public List<String> queryCourses(String teacherId, String universityName) {
         List<String> res=new ArrayList<>();
         Cursor cursor=db.rawQuery("select * from course where universityName = ? AND teacherId = ?", new String[] {universityName,teacherId});
@@ -213,7 +232,7 @@ public class Database extends SQLiteOpenHelper {
             do {
                 String course=cursor.getString(cursor.getColumnIndex("courseName"));
                 res.add(course);
-            }while (cursor.moveTonext());
+            }while (cursor.moveToNext());
         }
         return res;
         
@@ -273,6 +292,21 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
+
+
+    public List<String> queryClasses(String courseId){
+        List<String> res=new ArrayList<>();
+        Cursor cursor=db.rawQuery("select * from class where courseId = ?", new String[] {courseId});
+        if(cursor!=null && cursor.moveToFirst()) {
+            do {
+                String CLASS=cursor.getString(cursor.getColumnIndex("classId"));
+                res.add(CLASS);
+            }while(cursor.moveToNext());
+        }
+        return res;
+    }
+
+
     public ReturnMsg addClass(String startTime, String courseId) {
         ReturnMsg returnMsg=new ReturnMsg();
         boolean isSuccess=true;
@@ -299,7 +333,7 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-        public ReturnMsg deleteClass(String classId) {
+    public ReturnMsg deleteClass(String classId) {
         ReturnMsg returnMsg=new ReturnMsg();
         boolean isSuccess=true;
         String message="";
@@ -318,7 +352,23 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-        public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
+
+
+
+    public List<String> queryRecords(String classId){
+        List<String> res=new ArrayList<>();
+        Cursor cursor=db.rawQuery("select * from record where classId = ?", new String[] {classId});
+        if(cursor!=null && cursor.moveToFirst()) {
+            do {
+                String record=cursor.getString(cursor.getColumnIndex("classId"));
+                res.add(record);
+            }while(cursor.moveToNext());
+        }
+        return res;
+    }
+
+
+    public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
         ReturnMsg returnMsg=new ReturnMsg();
         boolean isSuccess=true;
         String message="";
@@ -334,6 +384,29 @@ public class Database extends SQLiteOpenHelper {
         ContentValues contentValues=new ContentValues();
         contentValues.put(COL2,teacherName);
         contentValues.put(COL_4,email);
+        db.update(teacher,contentValues,"teacherId = ?", new String[] {teacherId});
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+
+    public ReturnMsg changePassword(String teacherId, String oldPassword, String newPassword) {
+        ReturnMsg returnMsg=new ReturnMsg();
+        boolean isSuccess=true;
+        String message="";
+        Cursor cursor=db.rawQuery("select * from teacher where teacherId = ? AND password = ?", new String[] {teacherId, oldPassword});
+        if(cursor==null) {
+            isSuccess=false;
+            message="The password is not correct";
+        }
+        else {
+            message="Your password has been updated";
+        }
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_3,newPassword);
         db.update(teacher,contentValues,"teacherId = ?", new String[] {teacherId});
         returnMsg.setMessage(message);
         returnMsg.setSuccess(isSuccess);

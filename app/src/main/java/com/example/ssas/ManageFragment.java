@@ -58,6 +58,7 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
     }
 
 
+
     @Override
     /**
      * 注册监听事件
@@ -77,13 +78,14 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
                     public void onClick(DialogInterface dialog, int which)
                     {
                         String universityName = editText.getText().toString();
-                        //TODO: change the database and refresh the page
                         MainActivity.database.addUniversity(MainActivity.user.getId(),universityName);
                         University university = new University();
-                        university.setUniversityName(editText.getText().toString());
-                         universityList.add(university);
+                        university.setUniversityName(universityName);
+                        universityList.add(university);
                         //refreshAdapter();//刷新当前活动
-                        adapter.notifyDataSetChanged();
+                        adapter = new CollegeAdapter(universityList);
+                        recyclerView.setAdapter(adapter);
+
 
                     }
                 });
@@ -95,7 +97,6 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
     }
 
 
-    //TODO: get info from datebase
     public  void getUniversityList() {
         if(MainActivity.user.getId() == null)
             return;

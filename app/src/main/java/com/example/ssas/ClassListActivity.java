@@ -139,7 +139,6 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                         Class newClass = new Class();
                         //newClass.setStartTime(editText.getText().toString());
                         Toast.makeText(ClassListActivity.this, editText.getText().toString(),Toast.LENGTH_SHORT).show();
-                        Log.d("Date",editText.getText().toString());
                         SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
                         Date date = null;
                         try
@@ -151,8 +150,8 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                         }
                         newClass.setStartTime(date);
                         classList.add(newClass);
+                        MainActivity.database.addClass(newClass.getStartTimeInString(),course.getCourseID());
                         adapter.notifyDataSetChanged();
-
                     }
                 });
                 builder.setNegativeButton("Cancel",null);
@@ -209,14 +208,6 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
 
     //TODO: get info from datebase
     private void getClassList() {
-        classList = new ArrayList<>();
-
-        Class class1 = new Class();
-        Class class2 = new Class();
-        Date date1 = new Date();
-        class1.setStartTime(date1);
-        class2.setStartTime(date1);
-        classList.add(class1);
-        classList.add(class2);
+        classList = MainActivity.database.queryClasses(course.getCourseID());
     }
 }

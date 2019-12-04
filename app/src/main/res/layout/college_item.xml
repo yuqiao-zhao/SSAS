@@ -34,8 +34,15 @@
                 android:textSize="30sp" />
 
             <Button
+                android:id="@+id/modify_college"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableBottom="@android:drawable/ic_menu_edit" />
+
+            <Button
                 android:id="@+id/delete_college"
-                android:layout_width="69dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:drawableBottom="@android:drawable/ic_menu_delete" />

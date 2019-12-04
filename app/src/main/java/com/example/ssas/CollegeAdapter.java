@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
@@ -20,12 +21,14 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
     {
         TextView collegeName;
         Button deleteCollege;
+        Button modifyCollege;
 
         public ViewHolder(View view)
         {
             super(view);
             collegeName = (TextView) view.findViewById(R.id.college_name);
             deleteCollege = (Button)view.findViewById(R.id.delete_college);
+            modifyCollege = (Button) view.findViewById(R.id.modify_college);
         }
     }
 
@@ -47,7 +50,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                         int position = holder.getAdapterPosition();
                         University university = mCollegeList.get(position);
                         Toast.makeText(view.getContext(), university.getUniversityName(),Toast.LENGTH_SHORT).show();
-
                         CourseListActivity.actionStart(view.getContext(),university);
                     }
                 }
@@ -74,6 +76,40 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                                 notifyDataSetChanged();
                             }
 
+                        });
+                        builder.setNegativeButton("Cancel",null);
+                        builder.create().show();
+
+                    }
+                }
+        );
+        holder.modifyCollege.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        final int position = holder.getAdapterPosition();
+                        final University university = mCollegeList.get(position);
+
+                        final EditText editText = new EditText(view.getContext());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+                        builder.setTitle("Please enter the University's new name");//设置Title的内容
+                        builder.setView(editText);
+                        builder.setPositiveButton("Modify", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                String universityName = editText.getText().toString();
+                                //TODO: change the database and refresh the page
+                                MainActivity.database.modifyUniversity(university.getUniversityId(), universityName);
+                                university.setUniversityName(universityName);
+
+                                //refreshAdapter();//刷新当前活动
+                                notifyDataSetChanged();
+
+                            }
                         });
                         builder.setNegativeButton("Cancel",null);
                         builder.create().show();

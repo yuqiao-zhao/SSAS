@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,25 +88,50 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId())
         {
             case R.id.add_new_course:
-                final EditText editText = new EditText(this);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                builder.setTitle("Please enter a new course");//设置Title的内容
-                builder.setView(editText);
-                builder.setPositiveButton("Add", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        //TODO: change the database and refresh the page
-                        Course newCourse = new Course();
-                        newCourse.setCourseName(editText.getText().toString());
-                        courseList.add(newCourse);
-                        adapter.notifyDataSetChanged();
+                final AlertDialog dialog = builder.create();
+                View dialogView = View.inflate(this, R.layout.add_course, null);
+                dialog.setView(dialogView);
+                dialog.setTitle("Please enter a new course");
+                dialog.show();
 
+                final EditText editCourseName = (EditText)dialogView.findViewById(R.id.courseName_new);
+                final EditText editSemester = (EditText)dialogView.findViewById(R.id.semester_new);
+                Button confirm = (Button)dialogView.findViewById(R.id.confirm_new_course);
+                Button cancel = (Button)dialogView.findViewById(R.id.cancel_new_course);
+
+                confirm.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View view) {
+                        String courseName = editCourseName.getText().toString();
+                        String semester = editSemester.getText().toString();
+                        if (!TextUtils.isEmpty(courseName) && !TextUtils.isEmpty(semester))
+                        {
+                            Course newCourse = new Course();
+                            newCourse.setCourseName(courseName);
+                            newCourse.setSemester(semester);
+
+                            MainActivity.database.addCourse(MainActivity.user.getId(),courseName, college.getUniversityId(),semester);
+
+                            courseList.add(newCourse);
+                            adapter.notifyDataSetChanged();
+                        }
+                        else
+                        {
+                            Toast.makeText(CourseListActivity.this, "Course name and semester cannot be empty.", Toast.LENGTH_SHORT).show();
+
+                        }
+                        dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("Cancel",null);
-                builder.create().show();
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
                 break;
 
         }
@@ -119,21 +147,8 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
         context.startActivity(intent);
     }
 
-    //TODO: get info from datebase
     private void getCourseList() {
-        courseList = new ArrayList<>();
-        Course course1=new Course();
-        Course course2=new Course();
-        course1.setCourseID("111");
-        course1.setCourseName("Software Engineering");
-        course1.setSemester("2019 Fall");
-
-        course2.setCourseID("222");
-        course2.setCourseName("Cyber Security");
-        course2.setSemester("2019 Spring");
-
-        courseList.add(course1);
-        courseList.add(course2);
+        courseList = MainActivity.database.queryCourses(MainActivity.user.getId(),college.getUniversityId());
 
     }
 }

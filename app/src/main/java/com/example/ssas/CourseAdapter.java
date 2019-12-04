@@ -1,10 +1,12 @@
 package com.example.ssas;
 
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         TextView courseName;
         TextView semester;
         Button deleteCourse;
+        Button modifyCourse;
 
         public ViewHolder(View view)
         {
@@ -28,6 +31,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             courseName = (TextView) view.findViewById(R.id.course_name);
             deleteCourse = (Button) view.findViewById(R.id.delete_course);
             semester = (TextView) view.findViewById(R.id.semester);
+            modifyCourse = (Button) view.findViewById(R.id.modify_course);
         }
     }
 
@@ -61,7 +65,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     public void onClick(View v)
                     {
                         final int position = holder.getAdapterPosition();
-                        Course course = mCourseList.get(position);
+                        final Course course = mCourseList.get(position);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                         builder.setTitle("Do you want to delete the course? All the information in this course will be deleted.");//设置Title的内容
@@ -70,7 +74,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                //TODO: delete course from database
+                                MainActivity.database.deleteCourse(course.getCourseID());
                                 mCourseList.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -82,6 +86,61 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     }
                 }
         );
+
+        holder.modifyCourse.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        final int position = holder.getAdapterPosition();
+                        final Course course = mCourseList.get(position);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+                        final AlertDialog dialog = builder.create();
+                        View dialogView = View.inflate(view.getContext(), R.layout.add_course, null);
+                        dialog.setView(dialogView);
+                        dialog.setTitle("Please enter course information");
+                        dialog.show();
+
+                        final EditText editCourseName = (EditText)dialogView.findViewById(R.id.courseName_new);
+                        final EditText editSemester = (EditText)dialogView.findViewById(R.id.semester_new);
+                        Button confirm = (Button)dialogView.findViewById(R.id.confirm_new_course);
+                        Button cancel = (Button)dialogView.findViewById(R.id.cancel_new_course);
+
+                        confirm.setOnClickListener(new View.OnClickListener(){
+
+                            @Override
+                            public void onClick(View view) {
+                                String courseName = editCourseName.getText().toString();
+                                String semester = editSemester.getText().toString();
+                                if (!TextUtils.isEmpty(courseName) && !TextUtils.isEmpty(semester))
+                                {
+                                    MainActivity.database.modifyCourse(course.getCourseID(),courseName,semester);
+                                    course.setCourseName(courseName);
+                                    course.setSemester(semester);
+
+                                    notifyDataSetChanged();
+                                }
+                                else
+                                {
+                                    Toast.makeText(view.getContext(), "Course name and semester cannot be empty.", Toast.LENGTH_SHORT).show();
+
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                    }
+                });
+
         return holder;
 
     }

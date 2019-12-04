@@ -31,7 +31,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String CREATE_COURSE_TABLE = "create table course("
             + "courseId integer primary key autoincrement, "
             + "courseName text, "
-            + "universityName text, "
+            + "universityId integer, "
             + "teacherId integer, "
             + "semester text)";
 
@@ -203,10 +203,26 @@ public class Database extends SQLiteOpenHelper {
         return returnMsg;
     }
 
+    public ReturnMsg modifyUniversity(String universityId, String universityName)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
 
-    public List<Course> queryCourses(String teacherId, String universityName) {
+        ContentValues values = new ContentValues();
+        values.put("universityName", universityName);
+
+        db.update("university", values, "universityId = ?", new String[]{universityId});
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+    public List<Course> queryCourses(String teacherId, String universityId) {
         List<Course> res = new ArrayList<>();
-        Cursor cursor = db.rawQuery("select * from course where universityName = ? AND teacherId = ?", new String[]{universityName, teacherId});
+        Cursor cursor = db.rawQuery("select * from course where universityId = ? AND teacherId = ?", new String[]{universityId, teacherId});
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 Course course = new Course();
@@ -226,14 +242,31 @@ public class Database extends SQLiteOpenHelper {
 //            + "universityName text, "
 //            + "teacherId integer, "
 //            + "semester text)";
-    public ReturnMsg addCourse(String teacherId, String courseName, String universityName, String semester) {
+    public ReturnMsg modifyCourse(String courseId, String courseName, String semester)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues values = new ContentValues();
+        values.put("courseName", courseName);
+        values.put("semester", semester);
+
+        db.update("course", values, "courseId = ?", new String[]{courseId});
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public ReturnMsg addCourse(String teacherId, String courseName, String universityId, String semester) {
         ReturnMsg returnMsg = new ReturnMsg();
         boolean isSuccess = true;
         String message = "";
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("courseName", courseName);
-        contentValues.put("universityName", universityName);
+        contentValues.put("universityId", universityId);
         int id = Integer.parseInt(teacherId);
         contentValues.put("teacherId", id);
         contentValues.put("semester", semester);
@@ -263,46 +296,71 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-//    public ReturnMsg addClass(String startTime, String courseId) {
-//        ReturnMsg returnMsg = new ReturnMsg();
-//        boolean isSuccess = true;
-//        String message = "";
-//        Cursor cursor = db.rawQuery("select * from course where courseId = ? AND startTime = ?", new String[]{courseId, startTime});
-//        if (cursor != null && cursor.moveTofirst()) {
-//            isSuccess = false;
-//            message = "The class already exists";
-//        }
-//        if (isSuccess) {
-//            SQLiteDatabase db = this.getWritableDatabase();
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put(COL_1, startTime);
-//            int tem = Integer.parseInt(courseId);
-//            contentValues.put(COL_2, tem);
-//            db.insert(CLASS, null, contentValues);
-//            message = "new class added";
-//        }
-//        returnMsg.setMessage(message);
-//        returnMsg.setSuccess(isSuccess);
-//        return returnMsg;
-//    }
 
+    public List<Class> queryClasses(String courseId) {
+        List<Class> res = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from class where courseId = ?", new String[]{courseId});
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Class aClass=new Class();
+                aClass.setStartTime(aClass.StrToDate(cursor.getString(cursor.getColumnIndex("startTime"))));
+                aClass.setClassId(cursor.getString(cursor.getColumnIndex("classId")));
+                res.add(aClass);
+            } while (cursor.moveToNext());
+        }
+        return res;
 
-//    public ReturnMsg deleteClass(String classId) {
-//        ReturnMsg returnMsg = new ReturnMsg();
-//        boolean isSuccess = true;
-//        String message = "";
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        int res = db.delete(CLASS, "classId = ?", new String[]{classId});
-//        if (res == 0) {
-//            isSuccess = false;
-//            message = "The class does not exist.";
-//        } else {
-//            message = "Class deleted";
-//        }
-//        returnMsg.setMessage(message);
-//        returnMsg.setSuccess(isSuccess);
-//        return returnMsg;
-//    }
+    }
+    //    public static final String CREATE_CLASS_TABLE = "create table class("
+////            + "classId integer primary key autoincrement, "
+////            + "startTime text, "
+////            + "courseId integer)";
+    public ReturnMsg modifyClass(String classId, String startTime)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues values = new ContentValues();
+        values.put("startTime", startTime);
+
+        db.update("class", values, "classId = ?", new String[]{classId});
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public ReturnMsg addClass(String startTime, String courseId) {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("startTime", startTime);
+        contentValues.put("courseId", courseId);
+        db.insert("class", null, contentValues);
+        message = "new class added";
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public ReturnMsg deleteClass(String classId) {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+        int res = db.delete("class", "classId = ?", new String[]{classId});
+        if (res == 0) {
+            isSuccess = false;
+            message = "The class does't exist.";
+        } else {
+            message = "Class deleted";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
 
 
 //    public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {

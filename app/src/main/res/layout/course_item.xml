@@ -48,10 +48,15 @@
                     android:text="2019 Fall"
                     android:textSize="15sp" />
             </LinearLayout>
-
+            <Button
+                android:id="@+id/modify_course"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableBottom="@android:drawable/ic_menu_edit" />
             <Button
                 android:id="@+id/delete_course"
-                android:layout_width="69dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:drawableBottom="@android:drawable/ic_menu_delete" />

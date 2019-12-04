@@ -34,8 +34,8 @@
                     android:ellipsize="end"
                     android:maxLength="50"
                     android:singleLine="true"
-                    android:text="2019.1.1"
-                    android:textSize="30sp" />
+                    android:text="2019.01 01 23: 25:2123"
+                    android:textSize="23sp" />
                 <TextView
                     android:id="@+id/student_num"
                     android:layout_width="match_parent"
@@ -50,8 +50,14 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/modify_class"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:drawableBottom="@android:drawable/ic_menu_edit" />
+            <Button
                 android:id="@+id/delete_class"
-                android:layout_width="69dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:drawableBottom="@android:drawable/ic_menu_delete" />

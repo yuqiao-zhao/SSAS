@@ -20,7 +20,7 @@ import java.util.List;
 public class CourseListActivity extends AppCompatActivity implements View.OnClickListener{
     private List<Course> courseList = new ArrayList<>();
     private RecyclerView recyclerView = null;
-    private static String collegeName;
+    private static University college;
     private CourseAdapter adapter=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +112,9 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
     /**
      * 启动activity
      */
-    public static void actionStart(Context context, String name)
+    public static void actionStart(Context context, University university)
     {
-        collegeName = name;
+        college = university;
         Intent intent = new Intent(context, CourseListActivity.class);
         context.startActivity(intent);
     }

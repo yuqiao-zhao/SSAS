@@ -41,7 +41,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="User Name"
+                    android:text="Teacher ID"
                     android:textSize="20dp" />
 
                 <EditText
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="25dp"
-                    android:text="Login"
+                    android:text="Sign In"
                     android:textSize="25dp" />
             </LinearLayout>
 
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="60dp"
-                    android:text="Register"
+                    android:text="Sign Up"
                     android:textSize="20dp"
                     android:layout_marginLeft="70dp" />
 

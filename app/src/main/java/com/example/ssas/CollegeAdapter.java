@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHolder> {
-    private List<String> mCollegeList;
+    private List<University> mCollegeList;
     static class ViewHolder extends RecyclerView.ViewHolder
     {
         TextView collegeName;
@@ -29,7 +29,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
         }
     }
 
-    public CollegeAdapter(List<String> collegeList)
+    public CollegeAdapter(List<University> collegeList)
     {
         mCollegeList=collegeList;
     }
@@ -45,12 +45,10 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                     public void onClick(View v)
                     {
                         int position = holder.getAdapterPosition();
-                        String schoolName = mCollegeList.get(position);
-                        Toast.makeText(view.getContext(), schoolName,Toast.LENGTH_SHORT).show();
-                        //TODO: get course list from database
+                        University university = mCollegeList.get(position);
+                        Toast.makeText(view.getContext(), university.getUniversityName(),Toast.LENGTH_SHORT).show();
 
-
-                        CourseListActivity.actionStart(view.getContext(),schoolName);
+                        CourseListActivity.actionStart(view.getContext(),university);
                     }
                 }
         );
@@ -61,7 +59,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                     public void onClick(View v)
                     {
                         final int position = holder.getAdapterPosition();
-                        String schoolName = mCollegeList.get(position);
+                        final University university = mCollegeList.get(position);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                         builder.setTitle("Do you want to delete the college? All the information in this college will be deleted.");//设置Title的内容
@@ -71,6 +69,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 //TODO: delete course from database
+                                MainActivity.database.deleteUniversity(university.getUniversityId());
                                 mCollegeList.remove(position);
                                 notifyDataSetChanged();
                             }
@@ -87,7 +86,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
 
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        String collegeName= mCollegeList.get(position);
+        String collegeName= mCollegeList.get(position).getUniversityName();
         holder.collegeName.setText(collegeName);
     }
 

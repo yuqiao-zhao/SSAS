@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
+    public static MainActivity mainActivity;
     private long exitTime=System.currentTimeMillis();
     public static Database database;
 
@@ -50,6 +50,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
+
+    public MainActivity()
+    {
+        mainActivity = this;
+    }
+
+    public void refreshManagementFrag()
+    {
+        manageFragment = new ManageFragment();
+        setFragment(manageFragment);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.activeFragment_layout, fragment);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 }

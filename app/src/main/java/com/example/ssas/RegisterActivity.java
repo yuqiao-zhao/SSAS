@@ -104,11 +104,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         teacher.setId(userId);
         teacher.setEmail(userEmail);
         teacher.setName(userName);
+        teacher.setPassword(userPassword);
 
         //TODO: change database
+        ReturnMsg returnMsg = MainActivity.database.insertNewTeacher(userId,userPassword,userName,userEmail);
 
-        Toast.makeText(RegisterActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
-        MainActivity.user.setId(userId);
-        RegisterActivity.this.finish();//结束当前login的activity，直接回到main activity
+        if(returnMsg.getSuccess())
+        {
+            Toast.makeText(RegisterActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
+            MainActivity.user.setId(userId);
+            RegisterActivity.this.finish();//结束当前login的activity，直接回到main activity
+        }
+        else
+        {
+            Toast.makeText(RegisterActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

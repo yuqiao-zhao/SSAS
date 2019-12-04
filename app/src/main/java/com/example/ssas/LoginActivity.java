@@ -86,19 +86,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void login()
     {
-//        String userId, userPassword;//用户输入的id和密码
-//        userId = id.getText().toString();//获取用户输入的id
-//        userPassword = password.getText().toString();//获取用户输入的密码
-//        if (userId.length() == 0 || userPassword.length() == 0)//如果用户没有输入密码或者用户名，则不做任何反馈
-//        {
-//            Toast.makeText(LoginActivity.this, "Please enter username and password.", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
-        MainActivity.user.setId("11223344");
-        MainActivity.user.setName("Jeff");
-        MainActivity.user.setEmail("12345@gmail.com");
-        MainActivity.user.setPassword("123");
-        LoginActivity.this.finish();//结束当前login的activity，直接回到main activity
+        String userId, userPassword;//用户输入的id和密码
+        userId = id.getText().toString();//获取用户输入的id
+        userPassword = password.getText().toString();//获取用户输入的密码
+        if (userId.length() == 0 || userPassword.length() == 0)//如果用户没有输入密码或者用户名，则不做任何反馈
+        {
+            Toast.makeText(LoginActivity.this, "Please enter username and password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ReturnMsg returnMsg = MainActivity.database.queryLogin(userId, userPassword);
+        if(returnMsg.getSuccess())
+        {
+            Toast.makeText(LoginActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
+            MainActivity.user.setId(userId);
+            MainActivity.mainActivity.refreshManagementFrag();
+
+            LoginActivity.this.finish();//结束当前login的activity，直接回到main activity
+        }
+        else
+        {
+            Toast.makeText(LoginActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }

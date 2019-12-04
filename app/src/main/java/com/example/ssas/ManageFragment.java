@@ -22,9 +22,9 @@ import java.util.List;
 
 public class ManageFragment extends Fragment implements View.OnClickListener{
     private View view;
-    private List<String> universityList = new ArrayList<>();
+    private  List<University> universityList = new ArrayList<>();
     private RecyclerView recyclerView = null;
-    private CollegeAdapter adapter = null;
+    private  CollegeAdapter adapter = null;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_management, container, false);
@@ -39,13 +39,9 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
     public void onResume()
     {
         super.onResume();
+        getUniversityList();
     }
 
-    public void refreshAdapter()
-    {
-        CollegeAdapter adapter = new CollegeAdapter(universityList);
-        recyclerView.setAdapter(adapter);
-    }
     /**
      * 绑定控件
      */
@@ -80,8 +76,12 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        String universityName = editText.getText().toString();
                         //TODO: change the database and refresh the page
-                        universityList.add(editText.getText().toString());
+                        MainActivity.database.addUniversity(MainActivity.user.getId(),universityName);
+                        University university = new University();
+                        university.setUniversityName(editText.getText().toString());
+                         universityList.add(university);
                         //refreshAdapter();//刷新当前活动
                         adapter.notifyDataSetChanged();
 
@@ -96,9 +96,9 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
 
 
     //TODO: get info from datebase
-    private void getUniversityList() {
-        universityList = new ArrayList<>();
-        universityList.add("Tufts Unviersity");
-        universityList.add("Boston University");
+    public  void getUniversityList() {
+        if(MainActivity.user.getId() == null)
+            return;
+        universityList = MainActivity.database.queryUniversity(MainActivity.user.getId());
     }
 }

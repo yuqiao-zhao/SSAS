@@ -36,6 +36,7 @@
                     android:singleLine="true"
                     android:text="2019.01 01 23: 25:2123"
                     android:textSize="23sp" />
+
                 <TextView
                     android:id="@+id/student_num"
                     android:layout_width="match_parent"

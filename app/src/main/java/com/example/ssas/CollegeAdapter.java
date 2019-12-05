@@ -70,7 +70,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                //TODO: delete course from database
                                 MainActivity.database.deleteUniversity(university.getUniversityId());
                                 mCollegeList.remove(position);
                                 notifyDataSetChanged();

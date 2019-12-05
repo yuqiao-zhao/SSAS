@@ -55,6 +55,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 LoginActivity.this.finish();//结束login activity，打开register activity
                 RegisterActivity.actionStart(getApplicationContext());
                 break;
+            case R.id.forget_password:
+
+                break;
         }
     }
 

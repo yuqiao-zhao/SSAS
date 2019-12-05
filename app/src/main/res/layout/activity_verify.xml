@@ -4,21 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
-        <EditText
-            android:id="@+id/new_password"
+        <TextView
             android:layout_width="match_parent"
+            android:layout_marginTop="10pt"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:hint="New password"/>
+            android:text="Please enter the verification code:"
+            android:textSize="10pt"/>
 
     </LinearLayout>
 
@@ -29,17 +28,20 @@
 
 
         <EditText
-            android:id="@+id/confirm_new_password"
+            android:id="@+id/verificationCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10pt"
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:hint="Confirm your password"/>
+            android:hint=""/>
 
     </LinearLayout>
 
+
     <LinearLayout
+        android:layout_marginTop="5pt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -48,16 +50,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/submit_password"
+            android:id="@+id/submit_verification"
             android:layout_weight="1"
             android:text="Submit"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel_changePwd"
+            android:id="@+id/cancel_verification"
             android:layout_weight="1"
-            android:text="Cancel"/>
+            android:text="Back"/>
 
 
     </LinearLayout>

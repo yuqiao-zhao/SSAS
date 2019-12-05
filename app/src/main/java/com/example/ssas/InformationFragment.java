@@ -1,6 +1,8 @@
 package com.example.ssas;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,23 +16,34 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.teprinciple.mailsender.Mail;
+import com.teprinciple.mailsender.MailSender;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class InformationFragment extends Fragment implements View.OnClickListener{
     private View view;
     private EditText teacherName;
     private EditText email;
     private View saveProfile;
     private View resetPwd;
+    private View logout;
+    public static int verifyCode;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         view = inflater.inflate(R.layout.fragment_personal_information, container, false);
         bind();
-        //initInfo();
+        initInfo();
         return view;
     }
 
     @Override
     public void onResume()
     {
+        initInfo();
         super.onResume();
     }
 
@@ -43,24 +56,31 @@ public class InformationFragment extends Fragment implements View.OnClickListene
         email = (EditText)view.findViewById(R.id.email_display);
         saveProfile = view.findViewById(R.id.saveProfile);
         resetPwd = view.findViewById(R.id.changePassword);
+        logout = view.findViewById(R.id.logout);
         saveProfile.setOnClickListener(this);
         resetPwd.setOnClickListener(this);
-        teacherName.setText(MainActivity.user.getName());
-        email.setText(MainActivity.user.getEmail());
+        logout.setOnClickListener(this);
+//        teacherName.setText(MainActivity.user.getName());
+//        email.setText(MainActivity.user.getEmail());
     }
 
     //init info for the name and email
     private void initInfo()
     {
-        //TODO: consult the database
-        Log.d("username", MainActivity.user.getName());
-        teacherName.setText("jjj");
-
-
-
-        teacherName.setText("Jeff");
-        email.setText("xxxx@xxx.xxx");
+        if (MainActivity.user.getId() == null)
+        {
+            return;
+        }
+        List<Teacher> teacher = MainActivity.database.queryProfile(MainActivity.user.getId());
+        if(teacher != null)
+        {
+            teacherName.setText(teacher.get(0).getName());
+            email.setText(teacher.get(0).getEmail());
+            MainActivity.user.setName(teacher.get(0).getName());
+            MainActivity.user.setEmail(teacher.get(0).getEmail());
+        }
     }
+
 
     @Override
     /**
@@ -71,67 +91,52 @@ public class InformationFragment extends Fragment implements View.OnClickListene
         switch (v.getId())
         {
             case R.id.saveProfile:
-                //TODO: save profile to the database
-                MainActivity.user.setName(teacherName.getText().toString());
-                MainActivity.user.setEmail(email.getText().toString());
+                String newTeacherName = teacherName.getText().toString();
+                String newEmail = email.getText().toString();
+                MainActivity.database.changeProfile(newTeacherName, MainActivity.user.getId(), newEmail);
+                MainActivity.user.setName(newTeacherName);
+                MainActivity.user.setEmail(newEmail);
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                 builder2.setTitle("Save success!");//设置Title的内容
 
                 builder2.setPositiveButton("OK",null);
                 builder2.create().show();
                 break;
-
-            case R.id.changePassword:
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                final AlertDialog dialog = builder.create();
-                View dialogView = View.inflate(view.getContext(), R.layout.change_password, null);
-                dialog.setView(dialogView);
-                dialog.setTitle("Reset your password");
-                dialog.show();
-
-                final EditText oldPwdText = (EditText)dialogView.findViewById(R.id.old_password);
-                final EditText newPwdText = (EditText)dialogView.findViewById(R.id.new_password);
-                final EditText confirmPwdText = (EditText)dialogView.findViewById(R.id.confirm_new_password);
-                Button confirm = (Button)dialogView.findViewById(R.id.submit_password);
-                Button cancel = (Button)dialogView.findViewById(R.id.cancel_changePwd);
-
-                confirm.setOnClickListener(new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        String oldPwd = oldPwdText.getText().toString();
-                        String newPwd = newPwdText.getText().toString();
-                        String confirmPwd = confirmPwdText.getText().toString();
-                        //TODO:check if old password equals to the current password
-                        if (!oldPwd.equals(MainActivity.user.getPassword()))
-                        {
-                            Toast.makeText(view.getContext(), "Old password is wrong.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if(!newPwd.equals(confirmPwd))
-                        {
-                            Toast.makeText(view.getContext(), "Your new passwords are not equal.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        //TODO: change the database
-                        MainActivity.user.setPassword(newPwd);
-
-                        AlertDialog.Builder builder3 = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                        builder3.setTitle("Save success!");//设置Title的内容
-
-                        builder3.setPositiveButton("OK",null);
-                        builder3.create().show();
-
-                        dialog.dismiss();
-                    }
-                });
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
+            case R.id.logout:
+                MainActivity.user = new Teacher();
+                LoginActivity.actionStart(v.getContext());//打开登录界面
+                MainActivity.mainActivity.refreshManagementFrag();
                 break;
+            case R.id.changePassword:
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            int max=999999;
+                            int min=100000;
+                            Random random = new Random();
+
+                            verifyCode = random.nextInt(max)%(max-min+1) + min;
+
+                            GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
+                                    "www1234com");
+                            sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + verifyCode,
+                                    "jbddyyh2819@gmail.com", MainActivity.user.getEmail());
+                            //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
+                            VerifyActivity.actionStart(view.getContext());
+                        } catch (Exception e) {
+                            Looper.prepare();
+                            Toast.makeText(view.getContext(),"Please enter a valid email address!", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                            Log.e("SendMail", e.getMessage(), e);
+                        }
+                    }
+
+                }).start();
+
+                break;
+
         }
     }
 

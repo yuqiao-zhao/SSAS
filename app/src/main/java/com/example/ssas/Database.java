@@ -363,26 +363,55 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
-//    public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
-//        ReturnMsg returnMsg = new ReturnMsg();
-//        boolean isSuccess = true;
-//        String message = "";
-//        Cursor cursor = db.rawQuery("select * from teacher where teacherId = ?", new String[]{teacherId});
-//        if (cursor == null) {
-//            isSuccess = false;
-//            message = "The teacher's information is not found";
-//        } else {
-//            message = "The teacher's information updated";
-//        }
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put(COL2, teacherName);
-//        contentValues.put(COL_4, email);
-//        db.update(teacher, contentValues, "teacherId = ?", new String[]{teacherId});
-//        returnMsg.setMessage(message);
-//        returnMsg.setSuccess(isSuccess);
-//        return returnMsg;
-//    }
+
+    public ReturnMsg changePwd(String teacherId, String newPwd)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues values = new ContentValues();
+        values.put("password", newPwd);
+
+        db.update("teacher", values, "teacherId = ?", new String[]{teacherId});
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+    //    public static final String CREATE_TEACHER_TABLE = "CREATE TABLE IF NOT EXISTS teacher("
+//            + "teacherId integer primary key, "
+//            + "teacherName text, "
+//            + "password text, "
+//            + "email text)";
+    public List<Teacher> queryProfile(String teacherId) {
+        List<Teacher> res = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select * from teacher where teacherId = ?", new String[]{teacherId});
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Teacher teacher = new Teacher();
+                teacher.setName(cursor.getString(cursor.getColumnIndex("teacherName")));
+                teacher.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+                res.add(teacher);
+            } while (cursor.moveToNext());
+        }
+        return res;
+
+    }
+
+    public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("teacherName", teacherName);
+        contentValues.put("email", email);
+        db.update("teacher", contentValues, "teacherId = ?", new String[]{teacherId});
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
 
 }
 

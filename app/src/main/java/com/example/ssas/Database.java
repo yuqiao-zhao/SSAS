@@ -295,7 +295,15 @@ public class Database extends SQLiteOpenHelper {
         return returnMsg;
     }
 
-
+    public Boolean hasClassBefore(String courseId, String classId)
+    {
+        Cursor cursor = db.rawQuery("select * from class where courseId = ? and classId <> ?", new String[]{courseId,classId});
+        if (cursor != null && cursor.moveToFirst()) {
+            return true;
+        }
+        else
+            return false;
+    }
 
     public List<Class> queryClasses(String courseId) {
         List<Class> res = new ArrayList<>();
@@ -362,7 +370,48 @@ public class Database extends SQLiteOpenHelper {
         return returnMsg;
     }
 
+    public int findMaxClassIdInCourse(String courseId, String classId)
+    {
+        int max=0;
+        Cursor cursor = db.rawQuery("select max(classId) as maxium from class where courseId = ? and classId <> ?", new String[]{courseId,classId});
+        if (cursor != null && cursor.moveToFirst()) {
+            max = Integer.valueOf(cursor.getString(cursor.getColumnIndex("maxium")));
+        }
+        return max;
+    }
 
+    //    public static final String CREATE_RECORD_TABLE = "create table record("
+//            + "recordId integer primary key autoincrement, "
+//            + "studentId integer, "
+//            + "classId integer, "
+//            + "status text)";
+    public ReturnMsg createRecordsDefault(String classId, String courseId)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        int maxClassId = findMaxClassIdInCourse(courseId,classId);
+        Cursor cursor = db.rawQuery("select record.recordId,record.status,student.studentId,student.studentName,class.startTime  " +
+                "from record,class,student where class.classId = record.classId and class.classId = ? " +
+                "and record.studentId = student.studentId", new String[]{String.valueOf(maxClassId)});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                //update
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("studentId", cursor.getString(cursor.getColumnIndex("studentId")));
+                contentValues.put("classId", classId);
+                contentValues.put("status","Present");
+                db.insert("record", null, contentValues);
+
+            } while (cursor.moveToNext());
+        }
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
 
     public ReturnMsg changePwd(String teacherId, String newPwd)
     {
@@ -413,6 +462,179 @@ public class Database extends SQLiteOpenHelper {
         return returnMsg;
     }
 
+    public ReturnMsg addStudent(String studentId, String studentName)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        Cursor cursor = db.rawQuery("select * from student where studentId = ?", new String[]{studentId});
+        if (cursor != null && cursor.moveToFirst()) {
+            message = "Student already exist";
+            isSuccess = false;
+        }
+        else {
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("studentId", studentId);
+            contentValues.put("studentName", studentName);
+            db.insert("student", null, contentValues);
+            message = "new record added";
+        }
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+
+
+    public ReturnMsg addRecord(String studentId, String classId, String status)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("studentId", studentId);
+        contentValues.put("classId", classId);
+        contentValues.put("status", status);
+        db.insert("record", null, contentValues);
+        message = "new record added";
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public List<Record> queryRecord(String classId)
+    {
+        List<Record> records = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("select record.recordId,record.status,student.studentId,student.studentName,class.startTime  " +
+                "from record,class,student where class.classId = record.classId and class.classId = ? " +
+                "and record.studentId = student.studentId", new String[]{classId});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                Record record = new Record();
+                record.setRecordID(Long.valueOf(cursor.getString(cursor.getColumnIndex("recordId"))));
+                record.setStatus(cursor.getString(cursor.getColumnIndex("status")));
+                record.setSignInTime(Class.StrToDate(cursor.getString(cursor.getColumnIndex("startTime"))));
+                Student student = new Student();
+                student.setStudentID(cursor.getString(cursor.getColumnIndex("studentId")));
+                student.setStudentName(cursor.getString(cursor.getColumnIndex("studentName")));
+                record.setRegisteredStudent(student);
+                records.add(record);
+            } while (cursor.moveToNext());
+        }
+        return records;
+    }
+
+
+    public ReturnMsg saveRecords(List<Record> records)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        for(int i=0;i<records.size();i++)
+        {
+            Record record = records.get(i);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("status", record.getStatus());
+            db.update("record", contentValues, "recordId = ?", new String[]{String.valueOf(record.getRecordID())});
+        }
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public ReturnMsg deleteRecord(String recordId) {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+        int res = db.delete("record", "recordId = ?", new String[]{recordId});
+        if (res == 0) {
+            isSuccess = false;
+            message = "The record does't exist.";
+        } else {
+            message = "record deleted";
+        }
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+    public ReturnMsg modifyStudent(String studentId,String studentName)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("studentName", studentName);
+        db.update("student", contentValues, "studentId = ?", new String[]{studentId});
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+    public ReturnMsg modifyRecordAnyway(String studentId,String recordId, String studentName)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        modifyStudent(studentId, studentName);
+        //update record table
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("studentId", studentId);
+        db.update("record", contentValues, "recordId = ?", new String[]{recordId});
+
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
+
+
+    public ReturnMsg modifyRecord(String newStudentId, String oldStudentId, String recordId, String studentName)
+    {
+        ReturnMsg returnMsg = new ReturnMsg();
+        boolean isSuccess = true;
+        String message = "";
+
+        //add a new student
+        if(!newStudentId.equals(oldStudentId))
+        {
+            //judge whether newStudentId exist
+            Cursor cursor = db.rawQuery("select * from student where studentId = ?", new String[]{newStudentId});
+            if (cursor != null && cursor.moveToFirst()) {
+                message = "exist";
+                isSuccess = false;
+            }
+            else {
+                //add student to Student table
+                addStudent(newStudentId, studentName);
+                //update record table
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("studentId", newStudentId);
+                db.update("record", contentValues, "recordId = ?", new String[]{recordId});
+            }
+        }
+        else//modify existing student's name
+        {
+            //modify student table
+            modifyStudent(newStudentId,studentName);
+        }
+
+        returnMsg.setMessage(message);
+        returnMsg.setSuccess(isSuccess);
+        return returnMsg;
+    }
 }
 
 

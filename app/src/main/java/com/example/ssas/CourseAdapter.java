@@ -68,7 +68,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                         final Course course = mCourseList.get(position);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                        builder.setTitle("Do you want to delete the course? All the information in this course will be deleted.");//设置Title的内容
+                        builder.setTitle("WARNING");//设置Title的内容
+                        builder.setMessage("Do you want to delete the course? All the information in this course will be deleted.");
                         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
                         {
                             @Override

@@ -31,6 +31,8 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView = null;
     private RecordAdapter adapter=null;
     private static Class currentClass;
+    private static String signInTime;
+    private static String courseID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,36 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getRecordList();
         bind();
+        if(recordList.size() == 0)
+        {
+            establishDefaultRecords();
+        }
+    }
+
+    public void establishDefaultRecords()
+    {
+        Boolean hasClassBefore = MainActivity.database.hasClassBefore(courseID,currentClass.getClassId());
+        if(hasClassBefore)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+            builder.setTitle("");//设置Title的内容
+            builder.setMessage("This course has class before, do you want to use the student list created last time?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    MainActivity.database.createRecordsDefault(currentClass.getClassId(),courseID);
+                    getRecordList();
+                    adapter = new RecordAdapter(recordList);
+                    recyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                }
+
+            });
+            builder.setNegativeButton("No", null);
+            builder.create().show();
+
+        }
     }
 
     //Back to the father activity
@@ -71,6 +103,8 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
 
         View addRecord = (Button)findViewById(R.id.add_new_record);
         addRecord.setOnClickListener(this);
+        View saveRecord = (Button)findViewById(R.id.save_record);
+        saveRecord.setOnClickListener(this);
     }
 
     @Override
@@ -116,7 +150,12 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
                             student.setStudentID(studentID);
                             newRecord.setRegisteredStudent(student);
                             newRecord.setSignInTime(currentClass.getStartTime());
-                            recordList.add(newRecord);
+                            newRecord.setTeacherID(MainActivity.user.getId());
+                            MainActivity.database.addStudent(studentID,studentName);
+                            MainActivity.database.addRecord(studentID,currentClass.getClassId(),newRecord.getStatus());
+                            getRecordList();
+                            adapter = new RecordAdapter(recordList);
+                            recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         }
                         else
@@ -136,27 +175,29 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
                 });
                 break;
             case R.id.save_record:
-                //TODO: save record list to database
+                MainActivity.database.saveRecords(recordList);
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                 builder2.setTitle("Save success!");//设置Title的内容
 
                 builder2.setPositiveButton("OK",null);
                 builder2.create().show();
+                break;
         }
     }
 
     /**
      * 启动activity
      */
-    public static void actionStart(Context context, Class c)
+    public static void actionStart(Context context, Class c,String courseId)
     {
         currentClass = c;
+        courseID = courseId;
         Intent intent = new Intent(context, RecordListActivity.class);
         context.startActivity(intent);
     }
 
-    //TODO: get info from datebase
-    private void getRecordList() {
-        recordList = new ArrayList<>();
+    private void getRecordList()
+    {
+        recordList = MainActivity.database.queryRecord(currentClass.getClassId());
     }
 }

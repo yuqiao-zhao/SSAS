@@ -84,19 +84,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         if (userId.length() == 0 || userName.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、姓名、密码
         {
-            Toast.makeText(RegisterActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Please enter your id, name and password", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (userPasswordRepeat.length() == 0)//如果用户没有输入确认密码
         {
-            Toast.makeText(RegisterActivity.this, "请再输入一遍密码", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Please confirm your password", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!userPassword.equals(userPasswordRepeat))//如果用户两次输入的密码不一致
         {
-            Toast.makeText(RegisterActivity.this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "The password are not equal. Please enter again.", Toast.LENGTH_SHORT).show();
             return;
         }
 

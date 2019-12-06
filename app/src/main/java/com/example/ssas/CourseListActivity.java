@@ -114,7 +114,9 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
 
                             MainActivity.database.addCourse(MainActivity.user.getId(),courseName, college.getUniversityId(),semester);
 
-                            courseList.add(newCourse);
+                            getCourseList();
+                            adapter = new CourseAdapter(courseList);
+                            recyclerView.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         }
                         else

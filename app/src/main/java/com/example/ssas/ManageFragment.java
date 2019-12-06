@@ -79,10 +79,8 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
                     {
                         String universityName = editText.getText().toString();
                         MainActivity.database.addUniversity(MainActivity.user.getId(),universityName);
-                        University university = new University();
-                        university.setUniversityName(universityName);
-                        universityList.add(university);
                         //refreshAdapter();//刷新当前活动
+                        getUniversityList();
                         adapter = new CollegeAdapter(universityList);
                         recyclerView.setAdapter(adapter);
 

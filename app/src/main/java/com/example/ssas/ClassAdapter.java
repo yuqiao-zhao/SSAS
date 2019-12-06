@@ -26,6 +26,15 @@ import java.util.List;
 
 public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> {
     private List<Class> mClassList;
+    private String courseId;
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -63,7 +72,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                         Class aClass = mClassList.get(position);
                         Toast.makeText(view.getContext(), aClass.getStartTime().toString(),Toast.LENGTH_SHORT).show();
 
-                        RecordListActivity.actionStart(view.getContext(), aClass);
+                        RecordListActivity.actionStart(view.getContext(),aClass,courseId);
                     }
                 }
         );
@@ -77,7 +86,8 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                         final Class aClass = mClassList.get(position);
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
-                        builder.setTitle("Do you want to delete the class? All the information in this class will be deleted.");//设置Title的内容
+                        builder.setTitle("WARNING");//设置Title的内容
+                        builder.setMessage("Do you want to delete the class? All the information in this class will be deleted.");
                         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener()
                         {
                             @Override
@@ -144,7 +154,6 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
-                                //TODO: change the database and refresh the page
                                 //newClass.setStartTime(editText.getText().toString());
                                 Toast.makeText(view.getContext(), editText.getText().toString(),Toast.LENGTH_SHORT).show();
                                 SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
@@ -152,13 +161,14 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                                 try
                                 {
                                     date = sdf.parse(editText.getText().toString() + ":00");
+                                    aClass.setStartTime(date);
+                                    MainActivity.database.modifyClass(aClass.getClassId(),aClass.getStartTimeInString());
+                                    notifyDataSetChanged();
                                 } catch (ParseException e)
                                 {
                                     e.printStackTrace();
+                                    Toast.makeText(view.getContext(),"The date is invalid.",Toast.LENGTH_SHORT).show();
                                 }
-                                aClass.setStartTime(date);
-                                MainActivity.database.modifyClass(aClass.getClassId(),aClass.getStartTimeInString());
-                                notifyDataSetChanged();
                             }
                         });
                         builder.setNegativeButton("Cancel",null);
@@ -210,7 +220,7 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
     public void onBindViewHolder(ClassAdapter.ViewHolder holder, int position)
     {
         Class aClass = mClassList.get(position);
-        holder.classStartTime.setText(aClass.getStartTimeInString().toString());
+        holder.classStartTime.setText(aClass.getStartTimeInString());
         holder.studentNum.setText(aClass.getRecords().size() + " students");
     }
 

@@ -10,9 +10,10 @@ public class Class {
     private List<Record> records = new ArrayList<>();
     private String classId;
     private Date startTime;
-    private SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd hh:mm");
+    private static SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd HH:mm");
 
     public List<Record> getRecords() {
+        records = MainActivity.database.queryRecord(classId);
         return records;
     }
 
@@ -25,7 +26,7 @@ public class Class {
         return ft.format(getStartTime());
     }
 
-    public Date StrToDate(String str)
+    public static Date StrToDate(String str)
     {
         Date date = null;
         try {

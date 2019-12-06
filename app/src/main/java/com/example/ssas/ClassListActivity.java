@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ClassListActivity extends AppCompatActivity implements View.OnClickListener{
+    public ClassListActivity classListActivity;
     private List<Class> classList = new ArrayList<>();
     private RecyclerView recyclerView = null;
     private static Course course;
@@ -41,6 +42,16 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getClassList();
         bind();
+    }
+
+    public ClassListActivity()
+    {
+        classListActivity = this;
+    }
+
+    public void setStudentNum()
+    {
+
     }
 
     @Override
@@ -69,6 +80,7 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ClassAdapter(classList);
+        adapter.setCourseId(course.getCourseID());
         recyclerView.setAdapter(adapter);
 
         View addClass = (Button)findViewById(R.id.add_new_class);
@@ -97,6 +109,7 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
         {
             case R.id.add_new_class:
                 final EditText editText = new EditText(this);
+                final View tmpView = v;
                 editText.setOnTouchListener(new View.OnTouchListener() {
 
                     @Override
@@ -135,7 +148,6 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        //TODO: change the database and refresh the page
                         Class newClass = new Class();
                         //newClass.setStartTime(editText.getText().toString());
                         Toast.makeText(ClassListActivity.this, editText.getText().toString(),Toast.LENGTH_SHORT).show();
@@ -144,14 +156,19 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                         try
                         {
                             date = sdf.parse(editText.getText().toString() + ":00");
+                            newClass.setStartTime(date);
+                            MainActivity.database.addClass(newClass.getStartTimeInString(),course.getCourseID());
+                            getClassList();
+                            adapter = new ClassAdapter(classList);
+                            adapter.setCourseId(course.getCourseID());
+                            recyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                         } catch (ParseException e)
                         {
                             e.printStackTrace();
+                            Toast.makeText(tmpView.getContext(),"The date is invalid.",Toast.LENGTH_SHORT).show();
                         }
-                        newClass.setStartTime(date);
-                        classList.add(newClass);
-                        MainActivity.database.addClass(newClass.getStartTimeInString(),course.getCourseID());
-                        adapter.notifyDataSetChanged();
+
                     }
                 });
                 builder.setNegativeButton("Cancel",null);

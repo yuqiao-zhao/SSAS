@@ -123,8 +123,8 @@ public class InformationFragment extends Fragment implements View.OnClickListene
                                     "www1234com");
                             sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + verifyCode,
                                     "jbddyyh2819@gmail.com", MainActivity.user.getEmail());
-                            //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
-                            VerifyActivity.actionStart(view.getContext());
+
+                            VerifyActivity.actionStart(view.getContext(), MainActivity.user.getId());
                         } catch (Exception e) {
                             Looper.prepare();
                             Toast.makeText(view.getContext(),"Please enter a valid email address!", Toast.LENGTH_SHORT).show();

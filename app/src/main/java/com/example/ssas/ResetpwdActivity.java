@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 public class ResetpwdActivity extends AppCompatActivity implements View.OnClickListener{
     private static  VerifyActivity activity;
+    private static String teacherId;
     private EditText newPwd;
     private EditText confirmPwd;
     private Button submitPwd;
@@ -41,9 +42,10 @@ public class ResetpwdActivity extends AppCompatActivity implements View.OnClickL
     /**
      * 启动活动
      */
-    public static void actionStart(Context context, VerifyActivity a)
+    public static void actionStart(Context context, VerifyActivity a, String id)
     {
         activity = a;
+        teacherId = id;
         Intent intent = new Intent(context, ResetpwdActivity.class);
         context.startActivity(intent);
     }
@@ -60,10 +62,11 @@ public class ResetpwdActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Your new passwords are not equal.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                MainActivity.database.changePwd(MainActivity.user.getId(), newPassword);
+                MainActivity.database.changePwd(teacherId, newPassword);
                 InformationFragment.verifyCode = 0;
                 Toast.makeText(this, "Password reset Success! Please sign in again.", Toast.LENGTH_SHORT).show();
                 MainActivity.user = new Teacher();
+                IDInputActivity.resetSuccess = true;
                 activity.finishAll(this);
                 break;
             case R.id.cancel_changePwd:

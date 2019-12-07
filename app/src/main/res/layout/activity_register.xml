@@ -28,9 +28,24 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="430dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:lines="2"
+                    android:text="Items with a * are required fields."
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -40,8 +55,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Teacher ID"
-                    android:textSize="20dp" />
+                    android:text="Teacher ID*"
+                    android:textSize="16dp" />
 
                 <EditText
                     android:id="@+id/id"
@@ -61,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Name"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
 
                 <EditText
                     android:id="@+id/name"
@@ -80,8 +95,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Password"
-                    android:textSize="20dp" />
+                    android:text="Password*"
+                    android:textSize="16dp" />
 
                 <EditText
                     android:id="@+id/password"
@@ -101,8 +116,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Confirm"
-                    android:textSize="20dp" />
+                    android:text="Confirm*"
+                    android:textSize="16dp" />
 
                 <EditText
                     android:id="@+id/password_repeat"
@@ -122,15 +137,29 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="E-mail"
-                    android:textSize="20dp" />
+                    android:text="E-mail*"
+                    android:textSize="16dp" />
 
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:lines="2"
+                    android:text="        E-mail can not be changed after registration."
+                    android:textColor="@android:color/holo_blue_bright"
+                    android:textSize="13dp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -141,7 +170,7 @@
                 <Button
                     android:id="@+id/register"
                     android:layout_width="match_parent"
-                    android:layout_height="62dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:layout_margin="25dp"
                     android:text="Sign Up"

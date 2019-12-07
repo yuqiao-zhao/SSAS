@@ -29,7 +29,7 @@
 
 
         <EditText
-            android:id="@+id/verificationCode"
+            android:id="@+id/verificationCode_emailverify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10pt"
@@ -51,14 +51,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/submit_verification"
+            android:id="@+id/submit_verification_emailverify"
             android:layout_weight="1"
             android:text="Submit"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel_verification"
+            android:id="@+id/cancel_verification_emailverify"
             android:layout_weight="1"
             android:text="Back"/>
 

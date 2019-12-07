@@ -448,6 +448,29 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
+    public boolean isSignUp(String teacherId)
+    {
+        Cursor cursor = db.rawQuery("select * from teacher where teacherId = ?", new String[]{teacherId});
+        if (cursor != null && cursor.moveToFirst()) {
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public List<String> queryEmail(String teacherId)
+    {
+        List<String> res = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select email from teacher where teacherId = ?", new String[]{teacherId});
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String email = cursor.getString(cursor.getColumnIndex("email"));
+                res.add(email);
+            } while (cursor.moveToNext());
+        }
+        return res;
+    }
+
     public ReturnMsg changeProfile(String teacherName, String teacherId, String email) {
         ReturnMsg returnMsg = new ReturnMsg();
         boolean isSuccess = true;

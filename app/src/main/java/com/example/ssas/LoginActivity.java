@@ -17,6 +17,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText id;//用户的密码
     private EditText password;//用户的密码
+    private TextView forgetPwd;
     private Button login;//登录按钮
     private TextView register;//注册按钮
 
@@ -37,10 +38,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = (EditText) findViewById(R.id.password);
         login = (Button) findViewById(R.id.login);
         register = (TextView) findViewById(R.id.register);
+        forgetPwd = (TextView) findViewById(R.id.forget_password);
 
         //绑定监听器
         login.setOnClickListener(this);
         register.setOnClickListener(this);
+        forgetPwd.setOnClickListener(this);
     }
 
     @Override
@@ -56,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 RegisterActivity.actionStart(getApplicationContext());
                 break;
             case R.id.forget_password:
-
+                IDInputActivity.actionStart(this);
                 break;
         }
     }

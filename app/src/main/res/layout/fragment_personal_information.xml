@@ -70,6 +70,8 @@
             android:layout_gravity="center"
             android:layout_marginEnd="30dp"
             android:layout_weight="1"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:gravity="center"
             android:text="aaabbbcccdddeee@gmail.com"
             android:textSize="17sp" />

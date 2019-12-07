@@ -10,14 +10,14 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textviewVerify"
+            android:id="@+id/textviewIDInput"
             android:layout_width="match_parent"
             android:layout_marginTop="10pt"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:text="Please enter the verification code:"
+            android:text="Please enter your teacher ID:"
             android:textSize="10pt"/>
 
     </LinearLayout>
@@ -29,7 +29,7 @@
 
 
         <EditText
-            android:id="@+id/verificationCode"
+            android:id="@+id/inputID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10pt"
@@ -51,14 +51,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/submit_verification"
+            android:id="@+id/submit_ID"
             android:layout_weight="1"
-            android:text="Submit"/>
+            android:text="Confirm"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel_verification"
+            android:id="@+id/cancel_ID"
             android:layout_weight="1"
             android:text="Back"/>
 

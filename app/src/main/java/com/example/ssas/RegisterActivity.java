@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -24,6 +26,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText password_repeat;//用户的密码
     private Button register;//登录按钮
     private EditText email;//email
+
+    private String userId, userName, userPassword, userPasswordRepeat, userEmail;//用户输入的id、姓名、密码、确认密码
 
     private List<Map<String, Object>> list = new ArrayList<>();//从服务器端返回的结果
 
@@ -70,21 +74,41 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         context.startActivity(intent);
     }
 
+    public void finishRegister()
+    {
+        Teacher teacher =new Teacher();
+        teacher.setId(userId);
+        teacher.setEmail(userEmail);
+        teacher.setName(userName);
+        teacher.setPassword(userPassword);
+
+        MainActivity.user.setId(userId);
+        Toast.makeText(RegisterActivity.this, "Register success!", Toast.LENGTH_SHORT).show();
+        RegisterActivity.this.finish();//结束当前login的activity，直接回到main activity
+        ReturnMsg returnMsg = MainActivity.database.insertNewTeacher(userId,userPassword,userName,userEmail);
+    }
+
     /**
      * 注册
      */
     private void register()
     {
-        String userId, userName, userPassword, userPasswordRepeat, userEmail;//用户输入的id、姓名、密码、确认密码
         userId = id.getText().toString();//获取用户输入的id
         userName = name.getText().toString();//获取用户输入的姓名
         userPassword = password.getText().toString();//获取用户输入的密码
         userPasswordRepeat = password_repeat.getText().toString();////获取用户输入的确认密码
         userEmail = email.getText().toString();
 
-        if (userId.length() == 0 || userName.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、姓名、密码
+        if (userId.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、姓名、密码
         {
-            Toast.makeText(RegisterActivity.this, "Please enter your id, name and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Please enter your id and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Boolean isSignUp = MainActivity.database.isSignUp(userId);
+        if(isSignUp)//user has already signed up
+        {
+            Toast.makeText(RegisterActivity.this, "You have already signed up. Please sign in.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -100,25 +124,36 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
-        Teacher teacher =new Teacher();
-        teacher.setId(userId);
-        teacher.setEmail(userEmail);
-        teacher.setName(userName);
-        teacher.setPassword(userPassword);
-
-        //TODO: change database
-        ReturnMsg returnMsg = MainActivity.database.insertNewTeacher(userId,userPassword,userName,userEmail);
-
-        if(returnMsg.getSuccess())
+        if (userEmail.length() == 0)//如果用户没有输入email
         {
-            Toast.makeText(RegisterActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
-            MainActivity.user.setId(userId);
-            RegisterActivity.this.finish();//结束当前login的activity，直接回到main activity
-        }
-        else
-        {
-            Toast.makeText(RegisterActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    int max=999999;
+                    int min=100000;
+                    Random random = new Random();
+
+                    InformationFragment.verifyCode = random.nextInt(max)%(max-min+1) + min;
+
+                    GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
+                            "www1234com");
+                    sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + InformationFragment.verifyCode,
+                            "jbddyyh2819@gmail.com", userEmail);
+                    //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
+                    VerifyEmailActivity.actionStart(RegisterActivity.this, RegisterActivity.this);
+                } catch (Exception e) {
+                    Looper.prepare();
+                    Toast.makeText(RegisterActivity.this,"Please enter a valid email address!", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            }
+
+        }).start();
     }
 }

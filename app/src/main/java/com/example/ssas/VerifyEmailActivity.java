@@ -11,16 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class VerifyActivity extends AppCompatActivity implements View.OnClickListener{
+public class VerifyEmailActivity extends AppCompatActivity implements View.OnClickListener{
     private Button submitVerification;
     private Button back;
     private EditText verification;
-    private static String teacherId;
-
+    private static RegisterActivity registerActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verify);
+        setContentView(R.layout.activity_verifyemail);
         Toast.makeText(this, "A verification code was sent to your email.", Toast.LENGTH_LONG).show();
         bind();
     }
@@ -29,9 +28,9 @@ public class VerifyActivity extends AppCompatActivity implements View.OnClickLis
      * 绑定控件
      */
     private void bind() {
-        submitVerification = (Button) findViewById(R.id.submit_verification);
-        verification = (EditText) findViewById(R.id.verificationCode);
-        back = (Button) findViewById(R.id.cancel_verification);
+        submitVerification = (Button) findViewById(R.id.submit_verification_emailverify);
+        verification = (EditText) findViewById(R.id.verificationCode_emailverify);
+        back = (Button) findViewById(R.id.cancel_verification_emailverify);
 
         submitVerification.setOnClickListener(this);
         back.setOnClickListener(this);
@@ -40,10 +39,10 @@ public class VerifyActivity extends AppCompatActivity implements View.OnClickLis
     /**
      * 启动活动
      */
-    public static void actionStart(Context context, String id)
+    public static void actionStart(Context context, RegisterActivity activity)
     {
-        teacherId = id;
-        Intent intent = new Intent(context, VerifyActivity.class);
+        registerActivity = activity;
+        Intent intent = new Intent(context, VerifyEmailActivity.class);
         context.startActivity(intent);
     }
 
@@ -51,26 +50,22 @@ public class VerifyActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v)
     {
         switch (v.getId()) {
-            case R.id.submit_verification:
+            case R.id.submit_verification_emailverify:
                 String userInput = verification.getText().toString();
                 if(InformationFragment.verifyCode != 0 && userInput.equals(String.valueOf(InformationFragment.verifyCode)))
                 {
-                    ResetpwdActivity.actionStart(this, this, teacherId);
+                    registerActivity.finishRegister();
+                    this.finish();
                 }
                 else
                 {
                     Toast.makeText(this, "The verification code is wrong.",Toast.LENGTH_LONG).show();
                 }
                 break;
-            case R.id.cancel_verification:
+            case R.id.cancel_verification_emailverify:
                 finish();
                 break;
         }
     }
 
-    public void finishAll(Activity activity)
-    {
-        activity.finish();
-        this.finish();
-    }
 }

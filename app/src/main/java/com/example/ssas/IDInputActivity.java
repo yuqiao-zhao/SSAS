@@ -81,7 +81,6 @@ public class IDInputActivity extends AppCompatActivity implements View.OnClickLi
                                 int max=999999;
                                 int min=100000;
                                 Random random = new Random();
-
                                 InformationFragment.verifyCode = random.nextInt(max)%(max-min+1) + min;
                                 String email = MainActivity.database.queryEmail(userInputId).get(0);
 

@@ -52,7 +52,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     {
                         int position = holder.getAdapterPosition();
                         Course course = mCourseList.get(position);
-                        Toast.makeText(view.getContext(), course.getCourseName(),Toast.LENGTH_SHORT).show();
                         //TODO: get course list from database
                         ClassListActivity.actionStart(view.getContext(),course);
                     }

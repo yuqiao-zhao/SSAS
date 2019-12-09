@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         userPasswordRepeat = password_repeat.getText().toString();////获取用户输入的确认密码
         userEmail = email.getText().toString();
 
-        if (userId.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、姓名、密码
+        if (userId.length() == 0 || userPassword.length() == 0)//如果用户没有输入学号、密码
         {
             Toast.makeText(RegisterActivity.this, "Please enter your id and password", Toast.LENGTH_SHORT).show();
             return;
@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                     GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
                             "www1234com");
-                    sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + InformationFragment.verifyCode,
+                    sender.sendMail("A request of resetting password from SSAS", "The verification code is: " + InformationFragment.verifyCode,
                             "jbddyyh2819@gmail.com", userEmail);
                     //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
                     VerifyEmailActivity.actionStart(RegisterActivity.this, RegisterActivity.this, userEmail);

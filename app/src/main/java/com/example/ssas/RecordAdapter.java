@@ -65,7 +65,6 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.ViewHolder
                 Record record = mRecordList.get(position);
                 RadioButton radbtn = (RadioButton) view.findViewById(checkedId);
                 record.setStatus(radbtn.getText().toString());
-                Log.d("sssssssssssssssssss",record.getStatus());
             }
         });
         holder.deleteRecord.setOnClickListener(

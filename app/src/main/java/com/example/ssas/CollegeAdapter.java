@@ -49,7 +49,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                     {
                         int position = holder.getAdapterPosition();
                         University university = mCollegeList.get(position);
-                        Toast.makeText(view.getContext(), university.getUniversityName(),Toast.LENGTH_SHORT).show();
                         CourseListActivity.actionStart(view.getContext(),university);
                     }
                 }

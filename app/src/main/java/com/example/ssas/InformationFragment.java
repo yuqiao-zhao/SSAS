@@ -127,7 +127,7 @@ public class InformationFragment extends Fragment implements View.OnClickListene
 
                             GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
                                     "www1234com");
-                            sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + verifyCode,
+                            sender.sendMail("A request of resetting password from SSAS", "The verification code is: " + verifyCode,
                                     "jbddyyh2819@gmail.com", MainActivity.user.getEmail());
 
                             VerifyActivity.actionStart(view.getContext(), MainActivity.user.getId(), MainActivity.user.getEmail());

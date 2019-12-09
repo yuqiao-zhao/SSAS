@@ -70,7 +70,6 @@ public class ClassAdapter extends RecyclerView.Adapter<ClassAdapter.ViewHolder> 
                     {
                         int position = holder.getAdapterPosition();
                         Class aClass = mClassList.get(position);
-                        Toast.makeText(view.getContext(), aClass.getStartTime().toString(),Toast.LENGTH_SHORT).show();
 
                         RecordListActivity.actionStart(view.getContext(),aClass,courseId);
                     }

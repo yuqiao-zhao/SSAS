@@ -1,7 +1,9 @@
 package com.example.ssas;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,13 +35,16 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
     private static Class currentClass;
     private static String signInTime;
     private static String courseID;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_list);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getRecordList();
         bind();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Records");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         if(recordList.size() == 0)
         {
             establishDefaultRecords();
@@ -95,6 +100,8 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
      */
     private void bind()
     {
+        toolbar = (Toolbar) findViewById(R.id.record_toolbar);
+        setSupportActionBar(toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.record_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

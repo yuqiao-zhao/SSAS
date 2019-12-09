@@ -18,7 +18,14 @@
         <activity android:name=".VerifyActivity" />
         <activity android:name=".RecordListActivity" />
         <activity android:name=".ClassListActivity" />
-        <activity android:name=".CourseListActivity" />
+        <activity android:name=".CourseListActivity"
+            android:parentActivityName=".MainActivity"
+        >
+        <!-- Parent activity meta-data to support 4.0 and lower -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+        </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">

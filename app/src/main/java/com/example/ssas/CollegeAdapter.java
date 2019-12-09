@@ -101,7 +101,6 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 String universityName = editText.getText().toString();
-                                //TODO: change the database and refresh the page
                                 MainActivity.database.modifyUniversity(university.getUniversityId(), universityName);
                                 university.setUniversityName(universityName);
 

@@ -1,7 +1,9 @@
 package com.example.ssas;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,38 +27,27 @@ public class CourseListActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView = null;
     private static University college;
     private CourseAdapter adapter=null;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getCourseList();
         bind();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Courses");
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    //Back to the father activity
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                returnHome(this);
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public static void returnHome(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }
 
     /**
      * 绑定控件
      */
     private void bind()
     {
+        toolbar = (Toolbar) findViewById(R.id.course_toolbar);
+        setSupportActionBar(toolbar);
+
         recyclerView = (RecyclerView) findViewById(R.id.course_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

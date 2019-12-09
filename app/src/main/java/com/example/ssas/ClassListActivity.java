@@ -1,7 +1,9 @@
 package com.example.ssas;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +12,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.drm.DrmStore;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -35,23 +38,21 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView recyclerView = null;
     private static Course course;
     private ClassAdapter adapter = null;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_list);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getClassList();
         bind();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Classes");
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     public ClassListActivity()
     {
         classListActivity = this;
-    }
-
-    public void setStudentNum()
-    {
-
     }
 
     @Override
@@ -76,6 +77,9 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
      */
     private void bind()
     {
+        toolbar = (Toolbar) findViewById(R.id.class_toolbar);
+        setSupportActionBar(toolbar);
+
         recyclerView = (RecyclerView) findViewById(R.id.class_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

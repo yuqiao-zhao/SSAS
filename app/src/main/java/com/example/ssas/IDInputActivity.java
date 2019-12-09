@@ -67,6 +67,12 @@ public class IDInputActivity extends AppCompatActivity implements View.OnClickLi
                 Boolean isSignUp = MainActivity.database.isSignUp(userInputId);
                 if(isSignUp)
                 {
+                    //network is not connected
+                    if (!MainActivity.netWork.isMobileConnected(this) && !MainActivity.netWork.isWifiConnected(this))
+                    {
+                        Toast.makeText(this, "Connection failed. Please check your network connection.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     new Thread(new Runnable() {
 
                         @Override
@@ -77,13 +83,14 @@ public class IDInputActivity extends AppCompatActivity implements View.OnClickLi
                                 Random random = new Random();
 
                                 InformationFragment.verifyCode = random.nextInt(max)%(max-min+1) + min;
+                                String email = MainActivity.database.queryEmail(userInputId).get(0);
 
                                 GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
                                         "www1234com");
                                 sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + InformationFragment.verifyCode,
-                                        "jbddyyh2819@gmail.com", MainActivity.database.queryEmail(userInputId).get(0));
+                                        "jbddyyh2819@gmail.com", email);
                                 //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
-                                VerifyActivity.actionStart(IDInputActivity.this, userInputId);
+                                VerifyActivity.actionStart(IDInputActivity.this, userInputId, email);
                             } catch (Exception e) {
                                 Looper.prepare();
                                 Toast.makeText(IDInputActivity.this,"Please enter a valid email address!", Toast.LENGTH_SHORT).show();

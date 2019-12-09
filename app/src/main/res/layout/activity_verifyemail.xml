@@ -33,10 +33,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10pt"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:ellipsize="end"
             android:lines="1"
             android:hint=""/>
+
+        <TextView
+            android:id="@+id/countDown_email"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10pt"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="Resend in 30s"
+            android:textSize="10pt"/>
 
     </LinearLayout>
 

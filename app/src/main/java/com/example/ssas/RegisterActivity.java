@@ -130,6 +130,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
+        //network is not connected
+        if (!MainActivity.netWork.isMobileConnected(this) && !MainActivity.netWork.isWifiConnected(this))
+        {
+            Toast.makeText(RegisterActivity.this, "Connection failed. Please check your network connection.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new Thread(new Runnable() {
 
             @Override
@@ -146,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + InformationFragment.verifyCode,
                             "jbddyyh2819@gmail.com", userEmail);
                     //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
-                    VerifyEmailActivity.actionStart(RegisterActivity.this, RegisterActivity.this);
+                    VerifyEmailActivity.actionStart(RegisterActivity.this, RegisterActivity.this, userEmail);
                 } catch (Exception e) {
                     Looper.prepare();
                     Toast.makeText(RegisterActivity.this,"Please enter a valid email address!", Toast.LENGTH_SHORT).show();

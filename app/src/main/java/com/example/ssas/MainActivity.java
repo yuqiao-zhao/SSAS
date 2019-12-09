@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private InformationFragment informationFragment = null;
     static public Teacher user = new Teacher();
 
+    static public NetWork netWork = new NetWork();
+
 
 
     public String getDBPath(){

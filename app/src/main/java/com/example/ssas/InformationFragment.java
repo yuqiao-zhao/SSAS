@@ -108,6 +108,12 @@ public class InformationFragment extends Fragment implements View.OnClickListene
                 MainActivity.mainActivity.refreshManagementFrag();
                 break;
             case R.id.changePassword:
+                //network is not connected
+                if (!MainActivity.netWork.isMobileConnected(view.getContext()) && !MainActivity.netWork.isWifiConnected(view.getContext()))
+                {
+                    Toast.makeText(view.getContext(), "Connection failed. Please check your network connection.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Thread(new Runnable() {
 
                     @Override
@@ -124,7 +130,7 @@ public class InformationFragment extends Fragment implements View.OnClickListene
                             sender.sendMail("A request of reseting password from SSAS", "The verification code is: " + verifyCode,
                                     "jbddyyh2819@gmail.com", MainActivity.user.getEmail());
 
-                            VerifyActivity.actionStart(view.getContext(), MainActivity.user.getId());
+                            VerifyActivity.actionStart(view.getContext(), MainActivity.user.getId(), MainActivity.user.getEmail());
                         } catch (Exception e) {
                             Looper.prepare();
                             Toast.makeText(view.getContext(),"Please enter a valid email address!", Toast.LENGTH_SHORT).show();

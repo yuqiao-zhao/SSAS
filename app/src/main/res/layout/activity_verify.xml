@@ -38,6 +38,15 @@
             android:lines="1"
             android:hint=""/>
 
+        <TextView
+            android:id="@+id/countDown"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10pt"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="Resend in 30s"
+            android:textSize="10pt"/>
+
     </LinearLayout>
 
 

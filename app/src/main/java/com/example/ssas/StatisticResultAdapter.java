@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,6 +55,9 @@ public class StatisticResultAdapter extends RecyclerView.Adapter<StatisticResult
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         holder.recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(holder.recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        holder.recyclerView.addItemDecoration(dividerItemDecoration);
 
         return holder;
     }

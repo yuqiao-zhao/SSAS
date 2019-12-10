@@ -92,6 +92,7 @@ public class CollegeAdapter extends RecyclerView.Adapter<CollegeAdapter.ViewHold
                         final University university = mCollegeList.get(position);
 
                         final EditText editText = new EditText(view.getContext());
+                        editText.setText(holder.collegeName.getText());
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                         builder.setTitle("Please enter the University's new name");//设置Title的内容
                         builder.setView(editText);

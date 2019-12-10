@@ -35,13 +35,14 @@
                     android:maxLength="50"
                     android:singleLine="true"
                     android:text="Computer Theory"
-                    android:textSize="30sp" />
+                    android:textSize="20sp" />
                 <TextView
                     android:id="@+id/semester"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|left"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLength="50"
                     android:singleLine="true"

@@ -102,7 +102,17 @@
                 android:singleLine="true"
                 android:text="total class:"
                 android:textSize="15sp" />
+
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="15sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                    android:id="@+id/presenceStatus_recycler_view"

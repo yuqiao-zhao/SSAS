@@ -105,6 +105,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
                         final EditText editCourseName = (EditText)dialogView.findViewById(R.id.courseName_new);
                         final EditText editSemester = (EditText)dialogView.findViewById(R.id.semester_new);
+                        editCourseName.setText(holder.courseName.getText());
+                        editSemester.setText(holder.semester.getText());
                         Button confirm = (Button)dialogView.findViewById(R.id.confirm_new_course);
                         Button cancel = (Button)dialogView.findViewById(R.id.cancel_new_course);
 

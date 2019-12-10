@@ -23,7 +23,7 @@
             <TextView
                 android:id="@+id/college_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center|left"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
@@ -31,7 +31,7 @@
                 android:maxLength="50"
                 android:singleLine="true"
                 android:text="Tufts University"
-                android:textSize="30sp" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/modify_college"

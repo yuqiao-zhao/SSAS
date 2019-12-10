@@ -34,8 +34,8 @@
                     android:ellipsize="marquee"
                     android:maxLength="50"
                     android:singleLine="true"
-                    android:text="SSSSSSSSSSSSSSSSSS"
-                    android:textSize="20sp" />
+                    android:text="SSSSSSSSSSSSSSSSSssssS"
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/student_id"
@@ -47,7 +47,7 @@
                     android:maxLength="50"
                     android:singleLine="true"
                     android:text="ID: "
-                    android:textSize="15sp" />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <RadioGroup

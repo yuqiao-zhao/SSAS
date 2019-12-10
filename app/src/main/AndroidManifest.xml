@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".VerifyEmailActivity"></activity>
         <activity android:name=".IDInputActivity" />
+        <activity android:name=".StatisticSearchActivity" />
         <activity android:name=".ResetpwdActivity" />
         <activity android:name=".VerifyActivity" />
         <activity android:name=".RecordListActivity" />

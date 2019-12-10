@@ -658,6 +658,30 @@ public class Database extends SQLiteOpenHelper {
         returnMsg.setSuccess(isSuccess);
         return returnMsg;
     }
+
+    public List<StatisticResult> queryStatisticResult(String cName, String sID) {
+        List<StatisticResult> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("select record.recordId,record.status,student.studentId,student.studentName, class.startTime, course.semester, course.courseName " +
+                "from record,class,student,course where class.classId = record.classId " +
+                "and record.studentId = student.studentId " +
+                " and course.courseId = class.classId "+
+                "and course.courseName = ? and student.studentId = ? ", new String[]{cName, sID});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                StatisticResult res = new StatisticResult();
+                res.setStatus(cursor.getString(cursor.getColumnIndex("status")));
+                res.setSignInTime(Class.StrToDate(cursor.getString(cursor.getColumnIndex("startTime"))));
+                res.setStudentId(cursor.getString(cursor.getColumnIndex("studentId")));
+                res.setStudentName(cursor.getString(cursor.getColumnIndex("studentName")));
+                res.setCourseName(cursor.getString(cursor.getColumnIndex("courseName")));
+                res.setSemester(cursor.getString(cursor.getColumnIndex("semester")));
+                results.add(res);
+            } while (cursor.moveToNext());
+        }
+        return results;
+    }
 }
 
 

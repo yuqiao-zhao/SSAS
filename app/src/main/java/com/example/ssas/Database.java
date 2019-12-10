@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -679,6 +678,79 @@ public class Database extends SQLiteOpenHelper {
                 res.setSemester(cursor.getString(cursor.getColumnIndex("semester")));
                 results.add(res);
             } while (cursor.moveToNext());
+        }
+        return results;
+    }
+
+    public List<StatisticResultBrief> queryStatisticResultBrief(String cName, String sID) {
+        List<StatisticResultBrief> results = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery("select student.studentId,student.studentName, course.courseId, course.semester, course.courseName " +
+                "from student,course where " +
+                "course.courseName = ? and student.studentId = ? ", new String[]{cName, sID});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                StatisticResultBrief res = new StatisticResultBrief();
+                String courseId = cursor.getString(cursor.getColumnIndex("courseId"));
+                List<AttendanceTable> attendanceTables = queryAttendanceTable(courseId, sID);
+
+                if(attendanceTables != null) {
+                    res.setStudentId(cursor.getString(cursor.getColumnIndex("studentId")));
+                    res.setStudentName(cursor.getString(cursor.getColumnIndex("studentName")));
+                    res.setCourseName(cursor.getString(cursor.getColumnIndex("courseName")));
+                    res.setSemester(cursor.getString(cursor.getColumnIndex("semester")));
+                    res.setAttendanceTables(attendanceTables);
+                    results.add(res);
+                }
+            } while (cursor.moveToNext());
+        }
+        return results;
+    }
+
+//    public static final String CREATE_CLASS_TABLE = "create table class("
+//            + "classId integer primary key autoincrement, "
+//            + "startTime text, "
+//            + "courseId integer)";
+//
+//    public static final String CREATE_RECORD_TABLE = "create table record("
+//            + "recordId integer primary key autoincrement, "
+//            + "studentId integer, "
+//            + "classId integer, "
+//            + "status text)";
+    public List<AttendanceTable> queryAttendanceTable(String courseId, String sId) {
+        List<AttendanceTable> results = new ArrayList<>();
+        Cursor cursor = db.rawQuery("select class.classId, class.startTime " +
+                "from class where class.courseId = ?", new String[]{courseId});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                AttendanceTable attendanceTable = new AttendanceTable();
+
+                String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                String classId = cursor.getString(cursor.getColumnIndex("classId"));
+
+                attendanceTable.setClassTime(AttendanceTable.StrToDate(startTime));
+                String status = null;
+
+                Cursor cursor2 = db.rawQuery("select record.status " +
+                        "from record where record.classId = ? and record.studentId = ?", new String[]{classId, sId});
+                if (cursor2 != null && cursor2.moveToFirst()) {
+                    do {
+                        status = cursor2.getString(cursor2.getColumnIndex("status"));
+                    } while (cursor2.moveToNext());
+                }
+
+                    if (status != null) {
+                        attendanceTable.setStatus(status);
+                    } else {
+                        return null;//student didn't register to this course
+                    }
+
+                    results.add(attendanceTable);
+
+            }while (cursor.moveToNext()) ;
+
         }
         return results;
     }

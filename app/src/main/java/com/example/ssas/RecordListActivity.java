@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -85,6 +87,14 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
                 returnHome(this);
                 this.finish();
                 return true;
+            case R.id.more_item:
+                Course course = MainActivity.database.queryCourseById(courseID);
+                //TODO:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+                builder2.setMessage("The records were send to your email.");
+                builder2.setPositiveButton("OK",null);
+                builder2.create().show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -207,4 +217,12 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
     {
         recordList = MainActivity.database.queryRecord(currentClass.getClassId());
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 }

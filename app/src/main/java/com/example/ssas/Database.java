@@ -218,6 +218,20 @@ public class Database extends SQLiteOpenHelper {
         return returnMsg;
     }
 
+    public Course queryCourseById(String courseId)
+    {
+        Course course = new Course();
+        Cursor cursor = db.rawQuery("select * from course where courseId = ?", new String[]{courseId});
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                course.setCourseName(cursor.getString(cursor.getColumnIndex("courseName")));
+                course.setCourseID(cursor.getString(cursor.getColumnIndex("courseId")));
+                course.setSemester(cursor.getString(cursor.getColumnIndex("semester")));
+            } while (cursor.moveToNext());
+        }
+        return course;
+    }
+
 
     public List<Course> queryCourses(String teacherId, String universityId) {
         List<Course> res = new ArrayList<>();

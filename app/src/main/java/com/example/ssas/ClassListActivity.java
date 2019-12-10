@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.drm.DrmStore;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,6 +64,13 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                 returnHome(this);
                 this.finish();
                 return true;
+            case R.id.more_item:
+                //TODO:
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
+                builder2.setMessage("The records were send to your email.");
+                builder2.setPositiveButton("OK",null);
+                builder2.create().show();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -227,8 +236,16 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
         context.startActivity(intent);
     }
 
-    //TODO: get info from datebase
     private void getClassList() {
         classList = MainActivity.database.queryClasses(course.getCourseID());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu,menu);
+        MenuItem item = menu.getItem(0);
+        item.setTitle("Export records from all classes");
+        return super.onCreateOptionsMenu(menu);
     }
 }

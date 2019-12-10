@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +30,6 @@ public class ManageFragment extends Fragment implements View.OnClickListener{
     {
         view = inflater.inflate(R.layout.fragment_management, container, false);
         getUniversityList();
-
-
         bind();
         return view;
     }

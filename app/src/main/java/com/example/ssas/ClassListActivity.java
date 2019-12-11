@@ -27,12 +27,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 
 public class ClassListActivity extends AppCompatActivity implements View.OnClickListener{
     public ClassListActivity classListActivity;
@@ -65,7 +69,40 @@ public class ClassListActivity extends AppCompatActivity implements View.OnClick
                 this.finish();
                 return true;
             case R.id.more_item:
-                //TODO:
+                final Export export = new Export();
+
+                for(int i=0;i<classList.size();i++)
+                {
+                    Class aClass = classList.get(i);
+                    List<Record> recordList = MainActivity.database.queryRecord(aClass.getClassId());
+                    try {
+                        export.exportRecords(course.getCourseName(), course.getSemester(), aClass.getStartTime(), recordList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (WriteException e) {
+                        e.printStackTrace();
+                    } catch (BiffException e) {
+                        e.printStackTrace();
+                    }
+                }
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
+                                    "www1234com");
+                            sender.addAttachment(export.getFilePath(), export.getFileName());
+                            sender.sendMail("The attendance information from SSAS", "The attachment is the all the attendance records of classes " + " in course: " + course.getCourseName() + ".",
+                                    "jbddyyh2819@gmail.com",MainActivity.user.getEmail());
+                            //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }).start();
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                 builder2.setMessage("The records were send to your email.");
                 builder2.setPositiveButton("OK",null);

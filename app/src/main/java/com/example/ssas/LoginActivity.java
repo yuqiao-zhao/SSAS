@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText id;//用户的密码
@@ -106,6 +108,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(LoginActivity.this, returnMsg.getMessage(), Toast.LENGTH_SHORT).show();
             MainActivity.user.setId(userId);
             MainActivity.mainActivity.refreshManagementFrag();
+
+            List<Teacher> teacher = MainActivity.database.queryProfile(MainActivity.user.getId());
+            if(teacher != null)
+            {
+                MainActivity.user.setName(teacher.get(0).getName());
+                MainActivity.user.setEmail(teacher.get(0).getEmail());
+            }
 
             LoginActivity.this.finish();//结束当前login的activity，直接回到main activity
         }

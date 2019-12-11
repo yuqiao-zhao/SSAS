@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -24,11 +26,17 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 
 public class RecordListActivity extends AppCompatActivity implements View.OnClickListener{
     private List<Record> recordList = new ArrayList<>();
@@ -88,8 +96,37 @@ public class RecordListActivity extends AppCompatActivity implements View.OnClic
                 this.finish();
                 return true;
             case R.id.more_item:
-                Course course = MainActivity.database.queryCourseById(courseID);
+                final Course course = MainActivity.database.queryCourseById(courseID);
                 //TODO:
+                final Export export = new Export();
+                try {
+                    export.exportRecords(course.getCourseName(), course.getSemester(), currentClass.getStartTime(), recordList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (WriteException e) {
+                    e.printStackTrace();
+                } catch (BiffException e) {
+                    e.printStackTrace();
+                }
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            GMailSender sender = new GMailSender("jbddyyh2819@gmail.com",
+                                    "www1234com");
+                            sender.addAttachment(export.getFilePath(), export.getFileName());
+                            sender.sendMail("The attendance information from SSAS", "The attachment is the attendance record of class held on: " + currentClass.getStartTimeInString() + " in course: " + course.getCourseName() + ".",
+                                    "jbddyyh2819@gmail.com",MainActivity.user.getEmail());
+                            //Toast.makeText(view.getContext(),"The verification code was sent!", Toast.LENGTH_SHORT).show();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }).start();
+
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(this);//通过AlertDialog.Builder这个类来实例化我们的一个AlertDialog的对象
                 builder2.setMessage("The records were send to your email.");
                 builder2.setPositiveButton("OK",null);

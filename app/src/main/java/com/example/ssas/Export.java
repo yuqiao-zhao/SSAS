@@ -19,9 +19,14 @@ public class Export {
     private static SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
     private static SimpleDateFormat ft1 = new SimpleDateFormat ("yyyy-MM-dd hh:mm");
     private static int sheetindex = 0;
+    private String filePath = "";
+    private String filename = "";
 
+//    data/user/0/com.example.ssas/files/
     public void exportRecords(String courseName, String semester, Date classTime, List<Record> recordList) throws IOException, WriteException, BiffException {
-        String fileName = "data/user/0/com.example.ssas/files/" + courseName + "-" + semester.replace(" ", "") + ".xls";
+        String fileName = "data/data/com.example.ssas/" + courseName + "-" + semester.replace(" ", "") + ".xls";
+        filePath = fileName;
+        filename = courseName + "-" + semester.replace(" ", "") + ".xls";
         String sheetName = ft.format(classTime);
         String[] headers = new String[] {"registeredStudent", "signInTime", "status"};
 
@@ -71,4 +76,19 @@ public class Export {
 
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileName() {
+        return filename;
+    }
+
+    public void setFileName(String fileName) {
+        this.filename = fileName;
+    }
 }

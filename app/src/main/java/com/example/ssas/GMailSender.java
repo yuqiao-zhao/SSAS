@@ -4,18 +4,25 @@ import java.security.Security;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 public class GMailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;
     private String password;
     private Session session;
+    private Multipart _multipart= new MimeMultipart();
 
     static {
         Security.addProvider(new JSSEProvider());
@@ -42,6 +49,19 @@ public class GMailSender extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
+    public void addAttachment(String filePath, String filename) throws Exception {
+        BodyPart messageBodyPart = new MimeBodyPart();
+        DataSource source = new FileDataSource(filePath);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(filename);
+        _multipart.addBodyPart(messageBodyPart);
+//
+//        BodyPart messageBodyPart2 = new MimeBodyPart();
+//        messageBodyPart2.setText(subject);
+
+//        _multipart.addBodyPart(messageBodyPart2);
+    }
+
     public synchronized void sendMail(String subject, String body,
                                       String sender, String recipients) throws Exception {
         MimeMessage message = new MimeMessage(session);
@@ -49,6 +69,9 @@ public class GMailSender extends javax.mail.Authenticator {
         message.setSender(new InternetAddress(sender));
         message.setSubject(subject);
         message.setDataHandler(handler);
+
+        if(_multipart.getCount() != 0)
+            message.setContent(_multipart);
 
         if (recipients.indexOf(',') > 0)
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));

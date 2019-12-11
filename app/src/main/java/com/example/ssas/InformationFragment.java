@@ -135,6 +135,7 @@ public class InformationFragment extends Fragment implements View.OnClickListene
                             Looper.prepare();
                             Toast.makeText(view.getContext(),"Please enter a valid email address!", Toast.LENGTH_SHORT).show();
                             Looper.loop();
+                            e.printStackTrace();
                             Log.e("SendMail", e.getMessage(), e);
                         }
                     }

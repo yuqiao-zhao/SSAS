@@ -679,7 +679,7 @@ public class Database extends SQLiteOpenHelper {
                 "from record,class,student,course where class.classId = record.classId " +
                 "and record.studentId = student.studentId " +
                 " and course.courseId = class.classId "+
-                "and course.courseName = ? and student.studentId = ? ", new String[]{cName, sID});
+                "and course.courseName like ? and student.studentId = ? ", new String[]{cName, sID});
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -701,7 +701,7 @@ public class Database extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery("select student.studentId,student.studentName, course.courseId, course.semester, course.courseName " +
                 "from student,course where " +
-                "course.courseName = ? and student.studentId = ? ", new String[]{cName, sID});
+                "course.courseName like ? and student.studentId = ? ", new String[]{cName, sID});
 
         if (cursor != null && cursor.moveToFirst()) {
             do {

@@ -60,7 +60,7 @@ public class StatisticFragment extends Fragment implements View.OnClickListener{
 
         if (cName.length() == 0 || sId.length() == 0)//如果用户没有输入密码或者用户名，则不做任何反馈
         {
-            Toast.makeText(view.getContext(), "Please enter student ID and course ID for search.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Please enter student ID and course name for search.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -70,7 +70,7 @@ public class StatisticFragment extends Fragment implements View.OnClickListener{
         {
             StatisticSearchActivity.actionStart(view.getContext(), cName, sId);
         }else{
-            Toast.makeText(view.getContext(), "No result under such student ID and course ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "No result under such student ID and course name", Toast.LENGTH_SHORT).show();
             return;
         }
 
